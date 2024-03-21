@@ -1,0 +1,231 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* base colors */
+    --white: 255 255 255;
+    --black: 0 0 0;
+    --fuchsia-300: 291 93% 83%;
+    --fuchsia-950: 297 90% 16%;
+    --green-100: 141 84% 93%;
+    --green-200: 141 79% 85%;
+    --green-300: 142 77% 73%;
+    --green-400: 142 69% 58%;
+    --green-50: 138 76% 97%;
+    --green-500: 142 71% 45%;
+    --green-600: 142 76% 36%;
+    --green-700: 142 72% 29%;
+    --green-800: 143 64% 24%;
+    --green-900: 144 61% 20%;
+    --green-950: 145 80% 10%;
+    --neutral-100: 0 0% 96%;
+    --neutral-200: 0 0% 90%;
+    --neutral-300: 0 0% 83%;
+    --neutral-400: 0 0% 64%;
+    --neutral-50: 0 0% 98%;
+    --neutral-500: 0 0% 45%;
+    --neutral-600: 0 0% 32%;
+    --neutral-700: 0 0% 25%;
+    --neutral-800: 0 0% 15%;
+    --neutral-900: 0 0% 9%;
+    --neutral-950: 0 0% 4%;
+    --pink-100: 326 78% 95%;
+    --pink-200: 326 85% 90%;
+    --pink-300: 327 87% 82%;
+    --pink-400: 329 86% 70%;
+    --pink-50: 327 73% 97%;
+    --pink-500: 330 81% 60%;
+    --pink-600: 333 71% 51%;
+    --pink-700: 335 78% 42%;
+    --pink-800: 336 74% 35%;
+    --pink-900: 336 69% 30%;
+    --pink-950: 336 84% 17%;
+    --red-100: 0 93% 94%;
+    --red-200: 0 96% 89%;
+    --red-300: 0 94% 82%;
+    --red-400: 0 91% 71%;
+    --red-50: 0 86% 97%;
+    --red-500: 0 84% 60%;
+    --red-600: 0 72% 51%;
+    --red-700: 0 74% 42%;
+    --red-800: 0 70% 35%;
+    --red-900: 0 63% 31%;
+    --red-950: 0 75% 15%;
+    --sky-400: 198 93% 60%;
+    --sky-900: 202 80% 24%;
+    --violet-400: 255 92% 76%;
+    --violet-950: 261 73% 23%;
+    --yellow-100: 55 97% 88%;
+    --yellow-200: 53 98% 77%;
+    --yellow-300: 50 98% 64%;
+    --yellow-400: 48 96% 53%;
+    --yellow-50: 55 92% 95%;
+    --yellow-500: 45 93% 47%;
+    --yellow-600: 41 96% 40%;
+    --yellow-700: 35 92% 33%;
+    --yellow-800: 32 81% 29%;
+    --yellow-900: 28 73% 26%;
+    --yellow-950: 26 83% 14%;
+
+    /* utilities */
+    --radius: 0.5rem;
+
+    /* standard ui variables */
+    --destructive-active: var(--red-900);
+    --link: var(--green-800);
+    --primary-active: var(--green-600);
+    --secondary-active: var(--green-300);
+    --accent: var(--yellow-300);
+    --accent-foreground: var(--yellow-950);
+    --background: var(--neutral-50);
+    --border: var(--neutral-300);
+    --card: var(--neutral-50);
+    --card-foreground: var(--neutral-800);
+    --destructive: var(--red-800);
+    --destructive-foreground: var(--red-50);
+    --foreground: var(--neutral-800);
+    --input: var(--neutral-300);
+    --muted: var(--neutral-100);
+    --muted-foreground: var(--neutral-600);
+    --popover: var(--neutral-200);
+    --popover-foreground: var(--neutral-800);
+    --primary: var(--green-400);
+    --primary-foreground: var(--green-950);
+    --ring: var(--primary);
+    --secondary: var(--green-200);
+    --secondary-foreground: var(--green-800);
+    --answered: 204 86% 48%;
+    --not-allowed: 0 0% 64%;
+    --not-answered: 355 75% 37%;
+    --topic-1: 264 52% 12%;
+    --topic-2: 264 66% 22%;
+    --topic-3: 264 65% 33%;
+    --topic-4: 265 65% 46%;
+    --topic-5: 264 97% 62%;
+    --topic-6: 263 100% 72%;
+    --topic-7: 263 100% 79%;
+    --topic-8: 262 100% 87%;
+    --topic-9: 263 100% 93%;
+    --topic-10: 258 100% 97%;
+  }
+
+  [data-theme="dark"] {
+    --destructive-active: var(--red-900);
+    --link: var(--primary);
+    --primary-active: var(--green-500);
+    --secondary-active: var(--green-900);
+    --accent: var(--yellow-300);
+    --accent-foreground: var(--yellow-950);
+    --background: var(--neutral-950);
+    --border: var(--neutral-700);
+    --card: var(--neutral-800);
+    --card-foreground: var(--neutral-100);
+    --destructive: var(--red-800);
+    --destructive-foreground: var(--red-50);
+    --foreground: var(--neutral-100);
+    --input: var(--neutral-500);
+    --muted: var(--neutral-900);
+    --muted-foreground: var(--neutral-400);
+    --popover: var(--neutral-600);
+    --popover-foreground: var(--neutral-100);
+    --primary: var(--green-300);
+    --primary-foreground: var(--green-950);
+    --ring: var(--primary);
+    --secondary: var(--green-950);
+    --secondary-foreground: var(--green-300);
+    --answered: 203 98% 75%;
+    --not-allowed: 0 0% 45%;
+    --not-answered: 356 97% 64%;
+    --topic-1: 258 100% 97%;
+    --topic-2: 263 100% 93%;
+    --topic-3: 262 100% 87%;
+    --topic-4: 263 100% 79%;
+    --topic-5: 263 100% 72%;
+    --topic-6: 264 97% 62%;
+    --topic-7: 265 65% 46%;
+    --topic-8: 264 65% 33%;
+    --topic-9: 264 66% 22%;
+    --topic-10: 264 52% 12%;
+  }
+
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+.roboto-thin {
+  font-family: "Roboto", sans-serif;
+  font-weight: 100;
+  font-style: normal;
+}
+
+.roboto-light {
+  font-family: "Roboto", sans-serif;
+  font-weight: 300;
+  font-style: normal;
+}
+
+.roboto-regular {
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.roboto-medium {
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+  font-style: normal;
+}
+
+.roboto-bold {
+  font-family: "Roboto", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.roboto-black {
+  font-family: "Roboto", sans-serif;
+  font-weight: 900;
+  font-style: normal;
+}
+
+.roboto-thin-italic {
+  font-family: "Roboto", sans-serif;
+  font-weight: 100;
+  font-style: italic;
+}
+
+.roboto-light-italic {
+  font-family: "Roboto", sans-serif;
+  font-weight: 300;
+  font-style: italic;
+}
+
+.roboto-regular-italic {
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
+  font-style: italic;
+}
+
+.roboto-medium-italic {
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+  font-style: italic;
+}
+
+.roboto-bold-italic {
+  font-family: "Roboto", sans-serif;
+  font-weight: 700;
+  font-style: italic;
+}
+
+.roboto-black-italic {
+  font-family: "Roboto", sans-serif;
+  font-weight: 900;
+  font-style: italic;
+}

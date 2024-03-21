@@ -1,0 +1,982 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "FastAPI",
+    "version": "0.1.0"
+  },
+  "servers": [
+    {
+      "url": "https://fastapi-production-edb5.up.railway.app/api/v1/core",
+      "description": "Default server"
+    }
+  ],
+  "paths": {
+    "/analytics/conversation": {
+      "get": {
+        "tags": [
+          "analytics"
+        ],
+        "summary": "Get Conversation",
+        "description": "Get conversation with assistant data",
+        "operationId": "get_conversation",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Conversation Id"
+            },
+            "name": "conversation_id",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/analytics/categories": {
+      "post": {
+        "tags": [
+          "analytics"
+        ],
+        "summary": "Get Categories",
+        "description": "Get all categories for a list of assistant IDs",
+        "operationId": "get_categories",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array",
+                "title": "Assistant Ids",
+                "default": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/analytics/topics/count": {
+      "post": {
+        "tags": [
+          "analytics"
+        ],
+        "summary": "Get Topics Count",
+        "description": "Get total topics for all assistants",
+        "operationId": "get_topics_count",
+        "parameters": [
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "title": "From Date",
+              "default": "2024-03-13T17:30:26.661426"
+            },
+            "name": "from_date",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "title": "To Date",
+              "default": "2024-03-20T17:30:26.661443"
+            },
+            "name": "to_date",
+            "in": "query"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array",
+                "title": "Assistant Ids",
+                "default": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/analytics/topic/messages": {
+      "post": {
+        "tags": [
+          "analytics"
+        ],
+        "summary": "Get Topic Messages",
+        "description": "Get messages for a topic",
+        "operationId": "get_topic_messages",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Topic Id"
+            },
+            "name": "topic_id",
+            "in": "query"
+          },
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Category Id"
+            },
+            "name": "category_id",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "title": "From Date",
+              "default": "2024-03-13T17:30:26.662802"
+            },
+            "name": "from_date",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "title": "To Date",
+              "default": "2024-03-20T17:30:26.662816"
+            },
+            "name": "to_date",
+            "in": "query"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_analytics-get_topic_messages"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/assistants/": {
+      "get": {
+        "tags": [
+          "assistants"
+        ],
+        "summary": "List Assistants",
+        "description": "List all assistants",
+        "operationId": "List assistants",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListAssistantsResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "assistants"
+        ],
+        "summary": "Create Assistant",
+        "description": "Create a new assistant",
+        "operationId": "Create assistant",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssistantBase"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateAssistantResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/assistants/{assistantId}": {
+      "put": {
+        "tags": [
+          "assistants"
+        ],
+        "summary": "Update Assistant",
+        "description": "Update assistant",
+        "operationId": "Update assistant",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Assistantid"
+            },
+            "name": "assistantId",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssistantBase"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReadAssisantResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "assistants"
+        ],
+        "summary": "Delete Assistant",
+        "description": "Delete assistant",
+        "operationId": "Delete assistant",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Assistantid"
+            },
+            "name": "assistantId",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/assistants/{assistantId}/chat": {
+      "post": {
+        "tags": [
+          "assistants"
+        ],
+        "summary": "Chat With An Assistant",
+        "description": "Chat with an assistant",
+        "operationId": "Chat with an assistant",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Assistant Id"
+            },
+            "name": "assistant_id",
+            "in": "query"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssistantChatRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/assistant-categories/": {
+      "get": {
+        "tags": [
+          "assistant-categories"
+        ],
+        "summary": "Get All Assistant Categories",
+        "description": "Gets all assistant categories",
+        "operationId": "get_all_assistant_categories",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "assistant-categories"
+        ],
+        "summary": "Create Assistant Category",
+        "description": "Creates a new assistant category",
+        "operationId": "Create assistant category",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Assistant Id"
+            },
+            "name": "assistant_id",
+            "in": "query"
+          },
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Category Id"
+            },
+            "name": "category_id",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/categories/": {
+      "get": {
+        "tags": [
+          "categories"
+        ],
+        "summary": "Get All Categories",
+        "description": "Gets all categories",
+        "operationId": "get_all_categories",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "categories"
+        ],
+        "summary": "Create Category",
+        "description": "Creates a new category",
+        "operationId": "Create category",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Name"
+            },
+            "name": "name",
+            "in": "query"
+          },
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Description"
+            },
+            "name": "description",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/categories/defaults": {
+      "get": {
+        "tags": [
+          "categories"
+        ],
+        "summary": "Get Default Categories",
+        "description": "Gets all default categories",
+        "operationId": "get_default_categories",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      }
+    },
+    "/categories/{category_id}": {
+      "put": {
+        "tags": [
+          "categories"
+        ],
+        "summary": "Update Category",
+        "description": "Updates a category",
+        "operationId": "Update category",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Category Id"
+            },
+            "name": "category_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Name"
+            },
+            "name": "name",
+            "in": "query"
+          },
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Description"
+            },
+            "name": "description",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "categories"
+        ],
+        "summary": "Delete Category",
+        "description": "Deletes a category",
+        "operationId": "Delete category",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Category Id"
+            },
+            "name": "category_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AssistantBase": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "instructions": {
+            "type": "string",
+            "title": "Instructions"
+          },
+          "model": {
+            "type": "string",
+            "title": "Model",
+            "default": "gpt-4-1106-preview"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "instructions"
+        ],
+        "title": "AssistantBase"
+      },
+      "AssistantChatRequest": {
+        "properties": {
+          "conversation_id": {
+            "type": "string",
+            "title": "Conversation Id"
+          },
+          "message": {
+            "$ref": "#/components/schemas/MessageRequest"
+          }
+        },
+        "type": "object",
+        "title": "AssistantChatRequest"
+      },
+      "Body_analytics-get_topic_messages": {
+        "properties": {
+          "assistant_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Assistant Ids"
+          },
+          "answer_types": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Answer Types",
+            "default": [
+              "Answered",
+              "Not Answered",
+              "Not Allowed"
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "assistant_ids"
+        ],
+        "title": "Body_analytics-get_topic_messages"
+      },
+      "CreateAssistantResponse": {
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "title": "Success"
+          },
+          "error": {
+            "type": "string",
+            "title": "Error"
+          },
+          "data": {
+            "title": "Data"
+          }
+        },
+        "type": "object",
+        "required": [
+          "success"
+        ],
+        "title": "CreateAssistantResponse"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "ListAssistantsResponse": {
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "title": "Success"
+          },
+          "error": {
+            "type": "string",
+            "title": "Error"
+          },
+          "data": {
+            "items": {},
+            "type": "array",
+            "title": "Data",
+            "default": []
+          }
+        },
+        "type": "object",
+        "required": [
+          "success"
+        ],
+        "title": "ListAssistantsResponse"
+      },
+      "MessageRequest": {
+        "properties": {
+          "content": {
+            "type": "string",
+            "title": "Content"
+          },
+          "metadata": {
+            "type": "object",
+            "title": "Metadata"
+          }
+        },
+        "type": "object",
+        "required": [
+          "content"
+        ],
+        "title": "MessageRequest"
+      },
+      "ReadAssisantResponse": {
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "title": "Success"
+          },
+          "error": {
+            "type": "string",
+            "title": "Error"
+          },
+          "data": {
+            "title": "Data"
+          }
+        },
+        "type": "object",
+        "required": [
+          "success"
+        ],
+        "title": "ReadAssisantResponse"
+      },
+      "Response": {
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "title": "Success"
+          },
+          "error": {
+            "type": "string",
+            "title": "Error"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "items": {},
+                "type": "array"
+              },
+              {
+                "type": "object"
+              }
+            ],
+            "title": "Data"
+          }
+        },
+        "type": "object",
+        "required": [
+          "success"
+        ],
+        "title": "Response"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  }
+}
