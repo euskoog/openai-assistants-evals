@@ -40,6 +40,14 @@ import { AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { useConversations } from "~/hooks/useConversation";
 import { useTopics } from "~/hooks/useTopics";
 import { topicTableColumns } from "~/components/columns";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "~/components/ui/sheet";
 
 export const loader = async ({ request }: LoaderArgs) => {
   const assistants = (await Api.AssistantsService.listAssistants()).data || [];
@@ -210,7 +218,7 @@ export default function Index() {
   return (
     <div className="p-8 bg-background text-foreground min-h-screen w-full flex flex-col gap-4">
       <div className="flex-col">
-        <h2 className="text-3xl">Trends</h2>
+        <h2 className="text-3xl">Evaluations</h2>
         <p className="text-muted-foreground">
           These are trending categories based on users interactions with an
           assistant(s). Click a category in the Trends Breakdown chart to drill
@@ -219,6 +227,26 @@ export default function Index() {
       </div>
 
       <div className="flex flex-row gap-4">
+        <div className="flex flex-col gap-[6px] w-[240px]">
+          <label className="text-foreground text-sm">Assistants</label>
+          <div>
+            <MultipleSelector
+              defaultOptions={assistantOptionsSorted}
+              className="w-full"
+              placeholder="Select an Assistant..."
+              selected={selectedAssistants}
+              setSelected={setSelectedAssistants}
+              allSelectLabel="All Assistants"
+              dropdownRef={assistantsDropddownRef}
+              emptyIndicator={
+                <p className="text-center text-md leading-50">
+                  No assistants found.
+                </p>
+              }
+              groupBy="group"
+            />
+          </div>
+        </div>
         <div className="flex flex-col gap-[6px] max-w-[240px]">
           <label className="text-foreground text-sm">Categories</label>
           <div>
@@ -376,44 +404,55 @@ export default function Index() {
         )
       )}
       {topics && topicArrayWithSums.length > 0 && (
-        <div className="flex flex-col pt-4 pb-16 gap-4">
-          <h3 className="text-2xl">Trends Breakdown</h3>
-          <div id="tableWrapper" className="flex flex-col items-start">
-            <div id="tableHeader" className="flex items-start self-stretch">
-              <div className="px-4 py-2 min-w-[256px] items-center justify-end">
-                <p className="text-md text-muted-foreground text-right">
-                  Category
-                </p>
-              </div>
-              <div className="px-4 py-2 w-full" />
-              <div className="px-4 py-2 min-w-[132px] items-center justify-end">
-                <p className="text-md text-muted-foreground text-right">
-                  Msg. Count
-                </p>
-              </div>
-              <div className="px-4 py-2 min-w-[132px] items-center justify-end">
-                <p className="text-md text-muted-foreground text-right">
-                  Answer Rate
-                </p>
-              </div>
-            </div>
-            {Object.entries(sortedCategoriesMap).map(
-              (category, index) =>
-                category[1].totalSum > 0 && (
-                  <CategoryRow
-                    key={index}
-                    maxCount={maxCategorySum}
-                    selected={selectedTopic}
-                    setSelected={setSelectedTopic}
-                    setConversation={setSelectedConversation}
-                    formattedCategory={category}
-                  />
-                )
-            )}
-          </div>
-        </div>
+        <h2 className="text-2xl">Trends Breakdown</h2>
       )}
-      <div>
+      <div className="flex flex-row gap-4">
+        {topics && topicArrayWithSums.length > 0 && (
+          <div className="flex flex-col pb-16 gap-4 w-full">
+            {!selectedTopic.topicId && (
+              <div className="text-muted-foreground bg-muted flex justify-center items-center text-center p-6 h-full">
+                <p>Expand a category and click a topic to see conversations</p>
+              </div>
+            )}
+            <div
+              id="tableWrapper"
+              className="flex flex-col items-start rounded-md border border-border"
+            >
+              <div id="tableHeader" className="flex items-start self-stretch">
+                <div className="px-4 py-2 min-w-[256px] items-center justify-end">
+                  <p className="text-md text-muted-foreground text-right">
+                    Category
+                  </p>
+                </div>
+                <div className="px-4 py-2 w-full" />
+                <div className="px-4 py-2 min-w-[132px] items-center justify-end">
+                  <p className="text-md text-muted-foreground text-right">
+                    Msg. Count
+                  </p>
+                </div>
+                <div className="px-4 py-2 min-w-[132px] items-center justify-end">
+                  <p className="text-md text-muted-foreground text-right">
+                    Answer Rate
+                  </p>
+                </div>
+              </div>
+              {Object.entries(sortedCategoriesMap).map(
+                (category, index) =>
+                  category[1].totalSum > 0 && (
+                    <CategoryRow
+                      key={index}
+                      maxCount={maxCategorySum}
+                      selected={selectedTopic}
+                      setSelected={setSelectedTopic}
+                      setConversation={setSelectedConversation}
+                      formattedCategory={category}
+                    />
+                  )
+              )}
+            </div>
+          </div>
+        )}
+
         {topicsData.loading || conversationsData.loading ? (
           <div className="flex h-full w-full items-center justify-center">
             <Spinner />
@@ -499,40 +538,136 @@ export default function Index() {
               ))}
             </div>
           </div>
-        ) : selectedTopic.topicId ? (
-          <div className="flex h-full flex-col self-stretch">
-            <div className="flex flex-row justify-between p-4 align-baseline items-baseline self-stretch">
-              <p className="text-foreground font-semibold text-lg leading-7">
-                {selectedTopic.topicName}:{" "}
-                {topicsData.data ? topicsData.data.length : 0} messages
-              </p>
-              <p className="text-sm">
-                {" "}
-                Answer Rate: {selectedTopicAnswerRate.toFixed(1)}%
-              </p>
-            </div>
-
-            <DataTable
-              tableRowOnClick={(row: any) => {
-                setSelectedConversation({
-                  conversationId: row.conversationId,
-                  messageId: row.id,
-                  classification: row.classification,
-                  sentiment: row.sentiment,
-                  timestamp: row.timestamp,
-                });
-              }}
-              usePadding
-              columns={topicTableColumns}
-              data={topicsData.data}
-              noResultsMessage={"No messages found."}
-            />
-          </div>
         ) : (
-          <div className="text-muted-foreground bg-muted flex justify-center items-center text-center p-6 h-full">
-            <p>Expand a category and click a topic to see conversations here</p>
-          </div>
+          selectedTopic.topicId && (
+            <div className="flex h-full w-full flex-col self-stretch border border-border rounded-md">
+              <div className="flex flex-row justify-between p-4 align-baseline items-baseline self-stretch">
+                <p className="text-foreground font-semibold text-lg leading-7">
+                  {selectedTopic.topicName}:{" "}
+                  {topicsData.data ? topicsData.data.length : 0} messages
+                </p>
+                <p className="text-sm">
+                  {" "}
+                  Answer Rate: {selectedTopicAnswerRate.toFixed(1)}%
+                </p>
+              </div>
+
+              <DataTable
+                tableRowOnClick={(row: any) => {
+                  setSelectedConversation({
+                    conversationId: row.conversationId,
+                    messageId: row.id,
+                    classification: row.classification,
+                    sentiment: row.sentiment,
+                    timestamp: row.timestamp,
+                  });
+                }}
+                usePadding
+                columns={topicTableColumns}
+                data={topicsData.data}
+                noResultsMessage={"No messages found."}
+              />
+            </div>
+          )
         )}
+        {/* <Sheet>
+            <SheetTrigger>Open</SheetTrigger>
+            <SheetContent>
+              {topicsData.loading || conversationsData.loading ? (
+                <div className="flex h-full w-full items-center justify-center">
+                  <Spinner />
+                </div>
+              ) : (
+                selectedConversation.conversationId &&
+                selectedConversation.messageId && (
+                  <div className="flex h-full flex-col self-stretch w-full">
+                    <div className="flex flex-row justify-between p-4 align-baseline items-baseline self-stretch">
+                      <p className="text-foreground font-semibold text-lg leading-7">
+                        {selectedTopic.topicName}:{" "}
+                        {topicsData.data ? topicsData.data.length : 0} messages
+                      </p>
+                      <p className="text-sm">
+                        {" "}
+                        Answer Rate: {selectedTopicAnswerRate.toFixed(1)}%
+                      </p>
+                    </div>
+                    <div className="flex flex-row items-center gap-4 px-4 py-2 w-full ">
+                      <Button
+                        className="flex flex-row gap-1"
+                        variant="secondary"
+                        onClick={() =>
+                          setSelectedConversation(defaultSelectedConversation)
+                        }
+                      >
+                        <ArrowLeft className="h-4 w-4 shrink-0" />
+                        Back
+                      </Button>
+                      <div className="flex flex-row gap-2 items-center overflow-hidden w-full self-stretch">
+                        <div className=" flex flex-col items-start justify-center self-stretch">
+                          <p className="text-xs">Classification:</p>
+                          <p className="line-clamp-1 text-xs text-muted-foreground">
+                            {selectedConversation.classification}
+                          </p>
+                        </div>
+                        <div className=" flex flex-col items-start justify-center self-stretch">
+                          <p className="text-xs ">Sentiment:</p>
+                          <p className="line-clamp-1 text-xs text-muted-foreground">
+                            {parseFloat(selectedConversation.sentiment) > 0.4
+                              ? "Positive"
+                              : parseFloat(selectedConversation.sentiment) <
+                                -0.4
+                              ? "Negative"
+                              : "Neutral"}
+                          </p>
+                        </div>
+                        <div className="flex flex-col items-start justify-center self-stretch">
+                          <p className="text-xs">Time (UTC):</p>
+                          <p className="line-clamp-1 text-xs text-muted-foreground">
+                            {selectedConversationTimeFormatted}
+                          </p>
+                        </div>
+                        <div className="flex flex-col items-start justify-center self-stretch">
+                          <p className="text-xs">Assistant:</p>
+                          <p className="line-clamp-1 text-xs text-muted-foreground">
+                            {conversationsData.data["assistant"]["name"]}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex flex-col gap-1.5 items-center max-h-[100dvh] overflow-auto p-1">
+                      {conversationsData.data["message"].map(
+                        (message, index) => (
+                          <div
+                            key={index}
+                            className={cn(
+                              "flex flex-row gap-4 items-center rounded-sm p-4 w-full text-foreground",
+                              message.role === "ASSISTANT" && "bg-card",
+                              message.id === selectedConversation.messageId &&
+                                "bg-secondary shadow-[0px_0px_15px_0px] shadow-primary border border-primary text-secondary-foreground"
+                            )}
+                          >
+                            <AvatarWrapper variant={message.role}>
+                              <AvatarImage
+                                src={
+                                  roleAttributes[
+                                    message.role.toLowerCase() as
+                                      | "user"
+                                      | "assistant"
+                                  ].imgSrc
+                                }
+                              />
+                              <AvatarFallback>CN</AvatarFallback>
+                            </AvatarWrapper>
+                            <p className="text-md">{message.content}</p>
+                          </div>
+                        )
+                      )}
+                    </div>
+                  </div>
+                )
+              )}
+            </SheetContent>
+          </Sheet> */}
       </div>
     </div>
   );

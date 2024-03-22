@@ -87,7 +87,7 @@ export const CategoryRow = (props: CategoryRowProps) => {
         setIsExpanded(!isExpanded);
       }}
       className={cn(
-        "min-h-16 flex flex-row self-stretch border-t border-border cursor-pointer transition-all duration-200 ease-in-out ",
+        "min-h-16 flex flex-row self-stretch border-t border-border rounded-b-md cursor-pointer transition-all duration-200 ease-in-out ",
         isExpanded ? "bg-muted" : "hover:bg-muted/50 bg-background"
       )}
     >
