@@ -20,6 +20,17 @@
     --green-800: 143 64% 24%;
     --green-900: 144 61% 20%;
     --green-950: 145 80% 10%;
+    --blue-100: 210, 84%, 93%;
+    --blue-200: 210, 79%, 85%;
+    --blue-300: 210, 77%, 73%;
+    --blue-400: 210, 69%, 58%;
+    --blue-50: 210, 76%, 97%;
+    --blue-500: 210, 71%, 45%;
+    --blue-600: 210, 76%, 36%;
+    --blue-700: 210, 72%, 29%;
+    --blue-800: 210, 64%, 24%;
+    --blue-900: 210, 61%, 20%;
+    --blue-950: 210, 80%, 10%;
     --neutral-100: 0 0% 96%;
     --neutral-200: 0 0% 90%;
     --neutral-300: 0 0% 83%;
@@ -74,9 +85,9 @@
 
     /* standard ui variables */
     --destructive-active: var(--red-900);
-    --link: var(--green-800);
-    --primary-active: var(--green-600);
-    --secondary-active: var(--green-300);
+    --link: var(--blue-800);
+    --primary-active: var(--blue-600);
+    --secondary-active: var(--blue-300);
     --accent: var(--yellow-300);
     --accent-foreground: var(--yellow-950);
     --background: var(--neutral-50);
@@ -91,31 +102,31 @@
     --muted-foreground: var(--neutral-600);
     --popover: var(--neutral-200);
     --popover-foreground: var(--neutral-800);
-    --primary: var(--green-400);
-    --primary-foreground: var(--green-950);
-    --ring: var(--primary);
-    --secondary: var(--green-200);
-    --secondary-foreground: var(--green-800);
+    --primary: var(--blue-400);
+    --primary-foreground: var(--blue-950);
+    --ring: var(--blue);
+    --secondary: var(--blue-200);
+    --secondary-foreground: var(--blue-800);
     --answered: 204 86% 48%;
     --not-allowed: 0 0% 64%;
     --not-answered: 355 75% 37%;
-    --topic-1: 264 52% 12%;
-    --topic-2: 264 66% 22%;
-    --topic-3: 264 65% 33%;
-    --topic-4: 265 65% 46%;
-    --topic-5: 264 97% 62%;
-    --topic-6: 263 100% 72%;
-    --topic-7: 263 100% 79%;
-    --topic-8: 262 100% 87%;
-    --topic-9: 263 100% 93%;
-    --topic-10: 258 100% 97%;
+    --topic-1: 220 52% 12%;
+    --topic-2: 220 66% 22%;
+    --topic-3: 220 65% 33%;
+    --topic-4: 220 65% 46%;
+    --topic-5: 220 97% 62%;
+    --topic-6: 220 100% 72%;
+    --topic-7: 220 100% 79%;
+    --topic-8: 220 100% 87%;
+    --topic-9: 220 100% 93%;
+    --topic-10: 220 100% 97%;
   }
 
   [data-theme="dark"] {
     --destructive-active: var(--red-900);
     --link: var(--primary);
-    --primary-active: var(--green-500);
-    --secondary-active: var(--green-900);
+    --primary-active: var(--blue-500);
+    --secondary-active: var(--blue-900);
     --accent: var(--yellow-300);
     --accent-foreground: var(--yellow-950);
     --background: var(--neutral-950);
@@ -130,24 +141,24 @@
     --muted-foreground: var(--neutral-400);
     --popover: var(--neutral-600);
     --popover-foreground: var(--neutral-100);
-    --primary: var(--green-300);
-    --primary-foreground: var(--green-950);
+    --primary: var(--blue-300);
+    --primary-foreground: var(--blue-950);
     --ring: var(--primary);
-    --secondary: var(--green-950);
-    --secondary-foreground: var(--green-300);
+    --secondary: var(--blue-950);
+    --secondary-foreground: var(--blue-300);
     --answered: 203 98% 75%;
     --not-allowed: 0 0% 45%;
     --not-answered: 356 97% 64%;
-    --topic-1: 258 100% 97%;
-    --topic-2: 263 100% 93%;
-    --topic-3: 262 100% 87%;
-    --topic-4: 263 100% 79%;
-    --topic-5: 263 100% 72%;
-    --topic-6: 264 97% 62%;
-    --topic-7: 265 65% 46%;
-    --topic-8: 264 65% 33%;
-    --topic-9: 264 66% 22%;
-    --topic-10: 264 52% 12%;
+    --topic-1: 220 100% 97%;
+    --topic-2: 220 100% 93%;
+    --topic-3: 220 100% 87%;
+    --topic-4: 220 100% 79%;
+    --topic-5: 220 100% 72%;
+    --topic-6: 220 97% 62%;
+    --topic-7: 220 65% 46%;
+    --topic-8: 220 65% 33%;
+    --topic-9: 220 66% 22%;
+    --topic-10: 220 52% 12%;
   }
 
   * {
