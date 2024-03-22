@@ -71,13 +71,11 @@ export const loader = async ({ request }: LoaderArgs) => {
 export default function Index() {
   const { assistants, categories, topics } = useLoaderData<typeof loader>();
 
-  const assistantIds: string[] = assistants.map((assistant) => assistant.id);
-  console.log("assistantIds", assistantIds);
-
   const assistantsDropddownRef = useRef<HTMLDivElement>(null);
   const categoriesDropddownRef = useRef<HTMLDivElement>(null);
   const answerTypesDropddownRef = useRef<HTMLDivElement>(null);
 
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [selectedAssistants, setSelectedAssistants] = useState<Option[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<Option[]>([]);
   const [selectedAnswerTypes, setSelectedAnswerTypes] = useState<Option[]>([]);
@@ -85,6 +83,11 @@ export default function Index() {
     useState<SelectedTopic>(defaultSelectedTopic);
   const [selectedConversation, setSelectedConversation] =
     useState<SelectedConversation>(defaultSelectedConversation);
+
+  const toggleSheet = () => {
+    // setSelectedConversation(defaultSelectedConversation);
+    setIsSheetOpen(!isSheetOpen);
+  };
 
   const date = {
     from: startOfDay(addDays(new Date(), -14)),
@@ -216,7 +219,7 @@ export default function Index() {
   }, [selectedAssistants, selectedCategories, selectedAnswerTypes]);
 
   return (
-    <div className="p-8 bg-background text-foreground min-h-screen w-full flex flex-col gap-4">
+    <div className="pt-8 bg-background text-foreground min-h-screen w-full flex flex-col gap-4">
       <div className="flex-col">
         <h2 className="text-3xl">Evaluations</h2>
         <p className="text-muted-foreground">
@@ -226,13 +229,13 @@ export default function Index() {
         </p>
       </div>
 
-      <div className="flex flex-row gap-4">
-        <div className="flex flex-col gap-[6px] w-[240px]">
+      <div className="flex flex-col md:flex-row gap-2 md:gap-4">
+        <div className="flex flex-col gap-[6px] w-full md:w-[240px]">
           <label className="text-foreground text-sm">Assistants</label>
           <div>
             <MultipleSelector
               defaultOptions={assistantOptionsSorted}
-              className="w-full"
+              className="w-full md:w-[240px]"
               placeholder="Select an Assistant..."
               selected={selectedAssistants}
               setSelected={setSelectedAssistants}
@@ -247,13 +250,13 @@ export default function Index() {
             />
           </div>
         </div>
-        <div className="flex flex-col gap-[6px] max-w-[240px]">
+        <div className="flex flex-col gap-[6px] w-full md:w-[240px]">
           <label className="text-foreground text-sm">Categories</label>
           <div>
             <MultipleSelector
               defaultOptions={categoryOptionsSorted}
               options={categoryOptionsSorted}
-              className="w-[240px]"
+              className="w-full md:w-[240px]"
               placeholder="Select a category..."
               selected={selectedCategories}
               setSelected={setSelectedCategories}
@@ -268,12 +271,12 @@ export default function Index() {
             />
           </div>
         </div>
-        <div className="flex flex-col gap-[6px] max-w-[240px]">
+        <div className="flex flex-col gap-[6px] w-full md:w-[240px]">
           <label className="text-foreground text-sm">Answer Type</label>
           <div>
             <MultipleSelector
               defaultOptions={answerOptions}
-              className="w-[240px]"
+              className="w-full md:w-[240px]"
               placeholder="Select an answer type..."
               selected={selectedAnswerTypes}
               setSelected={setSelectedAnswerTypes}
@@ -293,17 +296,19 @@ export default function Index() {
       {topics.loading ? (
         <Spinner />
       ) : !(topicArrayWithSums.length > 0) ? (
-        <div className="bg-muted p-12 flex flex-col gap-2 items-center justify-center">
-          <TrendsEmpty />
+        <div className="bg-muted p-6 md:p-12 flex flex-col gap-2 md:gap-2 items-center justify-center">
+          <div className="hidden md:flex">
+            <TrendsEmpty />
+          </div>
           <h4 className="text-xl">No Data Available</h4>
-          <p className="text-sm">
+          <p className="text-sm text-center">
             Adjust the date range or filters. No trends may indicate the
             assistant hasn't been used yet.
           </p>
         </div>
       ) : (
         topicArrayWithSums.length > 0 && (
-          <div className="flex flex-row gap-4 w-full justify-between">
+          <div className="flex flex-col md:flex-row gap-4 w-full justify-between">
             <div className="w-full bg-muted border-[1px] border-border p-4 gap-2 flex flex-col items-left">
               <div className="flex flex-row gap-2">
                 <p className="text-md text-muted-foreground">Answer Rate</p>
@@ -387,13 +392,13 @@ export default function Index() {
                 </p>
                 <div className="flex flex-row">
                   <div className="w-4 h-5 bg-topic-1 flex-shrink-0" />
-                  <div className="w-4 h-5 bg-topic-2 flex-shrink-0" />
+                  <div className="w-4 h-5 bg-topic-2 flex-shrink-0 hidden md:flex" />
                   <div className="w-4 h-5 bg-topic-3 flex-shrink-0" />
-                  <div className="w-4 h-5 bg-topic-4 flex-shrink-0" />
+                  <div className="w-4 h-5 bg-topic-4 flex-shrink-0 hidden md:flex" />
                   <div className="w-4 h-5 bg-topic-5 flex-shrink-0" />
-                  <div className="w-4 h-5 bg-topic-6 flex-shrink-0" />
+                  <div className="w-4 h-5 bg-topic-6 flex-shrink-0 hidden md:flex" />
                   <div className="w-4 h-5 bg-topic-7 flex-shrink-0" />
-                  <div className="w-4 h-5 bg-topic-8 flex-shrink-0" />
+                  <div className="w-4 h-5 bg-topic-8 flex-shrink-0 hidden md:flex" />
                   <div className="w-4 h-5 bg-topic-9 flex-shrink-0" />
                   <div className="w-4 h-5 bg-topic-10 flex-shrink-0" />
                 </div>
@@ -406,7 +411,7 @@ export default function Index() {
       {topics && topicArrayWithSums.length > 0 && (
         <h2 className="text-2xl">Trends Breakdown</h2>
       )}
-      <div className="flex flex-row gap-4">
+      <div className="flex pb-8 xl:pb-0 flex-col xl:flex-row gap-0 xl:gap-4">
         {topics && topicArrayWithSums.length > 0 && (
           <div className="flex flex-col pb-16 gap-4 w-full">
             {!selectedTopic.topicId && (
@@ -453,90 +458,9 @@ export default function Index() {
           </div>
         )}
 
-        {topicsData.loading || conversationsData.loading ? (
+        {topicsData.loading ? (
           <div className="flex h-full w-full items-center justify-center">
             <Spinner />
-          </div>
-        ) : selectedConversation.conversationId &&
-          selectedConversation.messageId ? (
-          <div className="flex h-full flex-col self-stretch w-full">
-            <div className="flex flex-row justify-between p-4 align-baseline items-baseline self-stretch">
-              <p className="text-foreground font-semibold text-lg leading-7">
-                {selectedTopic.topicName}:{" "}
-                {topicsData.data ? topicsData.data.length : 0} messages
-              </p>
-              <p className="text-sm">
-                {" "}
-                Answer Rate: {selectedTopicAnswerRate.toFixed(1)}%
-              </p>
-            </div>
-            <div className="flex flex-row items-center gap-4 px-4 py-2 w-full ">
-              <Button
-                className="flex flex-row gap-1"
-                variant="secondary"
-                onClick={() =>
-                  setSelectedConversation(defaultSelectedConversation)
-                }
-              >
-                <ArrowLeft className="h-4 w-4 shrink-0" />
-                Back
-              </Button>
-              <div className="flex flex-row gap-2 items-center overflow-hidden w-full self-stretch">
-                <div className=" flex flex-col items-start justify-center self-stretch">
-                  <p className="text-xs">Classification:</p>
-                  <p className="line-clamp-1 text-xs text-muted-foreground">
-                    {selectedConversation.classification}
-                  </p>
-                </div>
-                <div className=" flex flex-col items-start justify-center self-stretch">
-                  <p className="text-xs ">Sentiment:</p>
-                  <p className="line-clamp-1 text-xs text-muted-foreground">
-                    {parseFloat(selectedConversation.sentiment) > 0.4
-                      ? "Positive"
-                      : parseFloat(selectedConversation.sentiment) < -0.4
-                      ? "Negative"
-                      : "Neutral"}
-                  </p>
-                </div>
-                <div className="flex flex-col items-start justify-center self-stretch">
-                  <p className="text-xs">Time (UTC):</p>
-                  <p className="line-clamp-1 text-xs text-muted-foreground">
-                    {selectedConversationTimeFormatted}
-                  </p>
-                </div>
-                <div className="flex flex-col items-start justify-center self-stretch">
-                  <p className="text-xs">Assistant:</p>
-                  <p className="line-clamp-1 text-xs text-muted-foreground">
-                    {conversationsData.data["assistant"]["name"]}
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="flex flex-col gap-1.5 items-center max-h-[100dvh] overflow-auto p-1">
-              {conversationsData.data["message"].map((message, index) => (
-                <div
-                  key={index}
-                  className={cn(
-                    "flex flex-row gap-4 items-center rounded-sm p-4 w-full text-foreground",
-                    message.role === "ASSISTANT" && "bg-card",
-                    message.id === selectedConversation.messageId &&
-                      "bg-secondary shadow-[0px_0px_15px_0px] shadow-primary border border-primary text-secondary-foreground"
-                  )}
-                >
-                  <AvatarWrapper variant={message.role}>
-                    <AvatarImage
-                      src={
-                        roleAttributes[
-                          message.role.toLowerCase() as "user" | "assistant"
-                        ].imgSrc
-                      }
-                    />
-                    <AvatarFallback>CN</AvatarFallback>
-                  </AvatarWrapper>
-                  <p className="text-md">{message.content}</p>
-                </div>
-              ))}
-            </div>
           </div>
         ) : (
           selectedTopic.topicId && (
@@ -561,6 +485,7 @@ export default function Index() {
                     sentiment: row.sentiment,
                     timestamp: row.timestamp,
                   });
+                  toggleSheet();
                 }}
                 usePadding
                 columns={topicTableColumns}
@@ -570,105 +495,89 @@ export default function Index() {
             </div>
           )
         )}
-        {/* <Sheet>
-            <SheetTrigger>Open</SheetTrigger>
-            <SheetContent>
-              {topicsData.loading || conversationsData.loading ? (
-                <div className="flex h-full w-full items-center justify-center">
-                  <Spinner />
+      </div>
+      <Sheet open={isSheetOpen} onOpenChange={toggleSheet}>
+        <SheetContent>
+          {topicsData.loading || conversationsData.loading ? (
+            <div className="flex h-full w-full items-center justify-center">
+              <Spinner />
+            </div>
+          ) : (
+            selectedConversation.conversationId &&
+            selectedConversation.messageId && (
+              <div className="flex h-full flex-col self-stretch w-full">
+                <div className="flex flex-row justify-between p-4 align-baseline items-baseline self-stretch">
+                  <p className="text-foreground font-semibold text-lg leading-7">
+                    {selectedTopic.topicName}:{" "}
+                    {topicsData.data ? topicsData.data.length : 0} messages
+                  </p>
+                  <p className="text-sm">
+                    {" "}
+                    Answer Rate: {selectedTopicAnswerRate.toFixed(1)}%
+                  </p>
                 </div>
-              ) : (
-                selectedConversation.conversationId &&
-                selectedConversation.messageId && (
-                  <div className="flex h-full flex-col self-stretch w-full">
-                    <div className="flex flex-row justify-between p-4 align-baseline items-baseline self-stretch">
-                      <p className="text-foreground font-semibold text-lg leading-7">
-                        {selectedTopic.topicName}:{" "}
-                        {topicsData.data ? topicsData.data.length : 0} messages
-                      </p>
-                      <p className="text-sm">
-                        {" "}
-                        Answer Rate: {selectedTopicAnswerRate.toFixed(1)}%
+                <div className="flex flex-row items-center gap-4 px-4 py-2 w-full ">
+                  <div className="flex flex-row gap-2 items-center overflow-hidden w-full self-stretch">
+                    <div className=" flex flex-col items-start justify-center self-stretch">
+                      <p className="text-xs">Classification:</p>
+                      <p className="line-clamp-1 text-xs text-muted-foreground">
+                        {selectedConversation.classification}
                       </p>
                     </div>
-                    <div className="flex flex-row items-center gap-4 px-4 py-2 w-full ">
-                      <Button
-                        className="flex flex-row gap-1"
-                        variant="secondary"
-                        onClick={() =>
-                          setSelectedConversation(defaultSelectedConversation)
-                        }
-                      >
-                        <ArrowLeft className="h-4 w-4 shrink-0" />
-                        Back
-                      </Button>
-                      <div className="flex flex-row gap-2 items-center overflow-hidden w-full self-stretch">
-                        <div className=" flex flex-col items-start justify-center self-stretch">
-                          <p className="text-xs">Classification:</p>
-                          <p className="line-clamp-1 text-xs text-muted-foreground">
-                            {selectedConversation.classification}
-                          </p>
-                        </div>
-                        <div className=" flex flex-col items-start justify-center self-stretch">
-                          <p className="text-xs ">Sentiment:</p>
-                          <p className="line-clamp-1 text-xs text-muted-foreground">
-                            {parseFloat(selectedConversation.sentiment) > 0.4
-                              ? "Positive"
-                              : parseFloat(selectedConversation.sentiment) <
-                                -0.4
-                              ? "Negative"
-                              : "Neutral"}
-                          </p>
-                        </div>
-                        <div className="flex flex-col items-start justify-center self-stretch">
-                          <p className="text-xs">Time (UTC):</p>
-                          <p className="line-clamp-1 text-xs text-muted-foreground">
-                            {selectedConversationTimeFormatted}
-                          </p>
-                        </div>
-                        <div className="flex flex-col items-start justify-center self-stretch">
-                          <p className="text-xs">Assistant:</p>
-                          <p className="line-clamp-1 text-xs text-muted-foreground">
-                            {conversationsData.data["assistant"]["name"]}
-                          </p>
-                        </div>
-                      </div>
+                    <div className=" flex flex-col items-start justify-center self-stretch">
+                      <p className="text-xs ">Sentiment:</p>
+                      <p className="line-clamp-1 text-xs text-muted-foreground">
+                        {parseFloat(selectedConversation.sentiment) > 0.4
+                          ? "Positive"
+                          : parseFloat(selectedConversation.sentiment) < -0.4
+                          ? "Negative"
+                          : "Neutral"}
+                      </p>
                     </div>
-                    <div className="flex flex-col gap-1.5 items-center max-h-[100dvh] overflow-auto p-1">
-                      {conversationsData.data["message"].map(
-                        (message, index) => (
-                          <div
-                            key={index}
-                            className={cn(
-                              "flex flex-row gap-4 items-center rounded-sm p-4 w-full text-foreground",
-                              message.role === "ASSISTANT" && "bg-card",
-                              message.id === selectedConversation.messageId &&
-                                "bg-secondary shadow-[0px_0px_15px_0px] shadow-primary border border-primary text-secondary-foreground"
-                            )}
-                          >
-                            <AvatarWrapper variant={message.role}>
-                              <AvatarImage
-                                src={
-                                  roleAttributes[
-                                    message.role.toLowerCase() as
-                                      | "user"
-                                      | "assistant"
-                                  ].imgSrc
-                                }
-                              />
-                              <AvatarFallback>CN</AvatarFallback>
-                            </AvatarWrapper>
-                            <p className="text-md">{message.content}</p>
-                          </div>
-                        )
-                      )}
+                    <div className="flex flex-col items-start justify-center self-stretch">
+                      <p className="text-xs">Time (UTC):</p>
+                      <p className="line-clamp-1 text-xs text-muted-foreground">
+                        {selectedConversationTimeFormatted}
+                      </p>
+                    </div>
+                    <div className="flex flex-col items-start justify-center self-stretch">
+                      <p className="text-xs">Assistant:</p>
+                      <p className="line-clamp-1 text-xs text-muted-foreground">
+                        {conversationsData.data["assistant"]["name"]}
+                      </p>
                     </div>
                   </div>
-                )
-              )}
-            </SheetContent>
-          </Sheet> */}
-      </div>
+                </div>
+                <div className="flex flex-col gap-1.5 items-center max-h-[100dvh] overflow-auto p-1">
+                  {conversationsData.data["message"].map((message, index) => (
+                    <div
+                      key={index}
+                      className={cn(
+                        "flex flex-row gap-4 items-center rounded-sm p-4 w-full text-foreground",
+                        message.role === "ASSISTANT" && "bg-card",
+                        message.id === selectedConversation.messageId &&
+                          "bg-secondary shadow-[0px_0px_15px_0px] shadow-primary border border-primary text-secondary-foreground"
+                      )}
+                    >
+                      <AvatarWrapper variant={message.role}>
+                        <AvatarImage
+                          src={
+                            roleAttributes[
+                              message.role.toLowerCase() as "user" | "assistant"
+                            ].imgSrc
+                          }
+                        />
+                        <AvatarFallback>CN</AvatarFallback>
+                      </AvatarWrapper>
+                      <p className="text-md">{message.content}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )
+          )}
+        </SheetContent>
+      </Sheet>
     </div>
   );
 }

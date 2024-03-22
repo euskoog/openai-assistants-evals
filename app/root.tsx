@@ -22,6 +22,7 @@ import { TooltipProvider } from "./components/ui/tooltip";
 import { QueryClientProvider } from "react-query";
 import { queryClient } from "./lib/evals/api";
 import { Toaster } from "./components/ui/toaster";
+import AppLayout from "./components/layout";
 
 export async function loader({ request }: LoaderArgs) {
   const url = new URL(request.url);
@@ -93,7 +94,9 @@ function App() {
         </head>
         <body className="bg-background h-[calc(100dvh)] w-screen m-0 p-0 text-foreground ">
           <TooltipProvider>
-            <Outlet />
+            <AppLayout>
+              <Outlet />
+            </AppLayout>
           </TooltipProvider>
           <ScrollRestoration />
           <Scripts />
