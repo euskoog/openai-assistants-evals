@@ -91,8 +91,8 @@ export const CategoryRow = (props: CategoryRowProps) => {
         isExpanded ? "bg-muted" : "hover:bg-muted/50 bg-background"
       )}
     >
-      <div className="p-4 min-w-[256px] pt-5 items-center justify-end">
-        <p className="truncate text-foreground text-right">{categoryName}</p>
+      <div className="p-4 min-w-[100px] md:min-w-[256px] pt-5 items-center justify-end">
+        <p className="truncate text-foreground md:text-right">{categoryName}</p>
       </div>
       <div className="flex flex-col gap-2 p-4 w-full">
         <CategoryRateBarChart barData={categoryData} max={props.maxCount} />
@@ -123,7 +123,7 @@ export const CategoryRow = (props: CategoryRowProps) => {
                     handleBarLeave();
                   }}
                   className={cn(
-                    "py-1 px-1.5 w-[148px] flex flex-row gap-1 items-baseline z-10 rounded-sm",
+                    "py-1 px-1.5 w-[120px] md:w-[148px] flex flex-row gap-1 items-baseline z-10 rounded-sm",
                     props.selected.topicId === topic.topicId &&
                       props.selected.categoryName === topic.categoryName
                       ? "border border-border bg-card"
@@ -154,12 +154,12 @@ export const CategoryRow = (props: CategoryRowProps) => {
           </div>
         )}
       </div>
-      <div className="p-4 min-w-[132px] pt-5 items-center justify-end">
-        <p className="text-foreground text-right">
+      <div className="p-4 min-w-[70px] md:min-w-[132px] pt-5 items-center justify-end">
+        <p className="text-foreground text-right truncate">
           {categoryData.totalSum || 0}
         </p>
       </div>
-      <div className="p-4 min-w-[132px] pt-5 justify-end">
+      <div className="hidden md:flex p-4 min-w-[132px] pt-5 justify-end">
         <p className="text-foreground text-right">
           {categoryData.numAnswered + categoryData.numNotAnswered > 0
             ? (

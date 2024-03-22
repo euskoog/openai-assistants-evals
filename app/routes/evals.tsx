@@ -32,22 +32,13 @@ import {
 import { cn } from "~/lib/utils";
 import { useLoaderData } from "@remix-run/react";
 import type { LoaderArgs } from "@remix-run/node";
-import { Button } from "~/components/ui/button";
-import { ArrowLeft } from "lucide-react";
 import { DataTable } from "~/components/ui/dataTable";
 import { AvatarWrapper, roleAttributes } from "~/components/ui/chatMessage";
 import { AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { useConversations } from "~/hooks/useConversation";
 import { useTopics } from "~/hooks/useTopics";
 import { topicTableColumns } from "~/components/columns";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "~/components/ui/sheet";
+import { Sheet, SheetContent } from "~/components/ui/sheet";
 
 export const loader = async ({ request }: LoaderArgs) => {
   const assistants = (await Api.AssistantsService.listAssistants()).data || [];
@@ -375,7 +366,7 @@ export default function Index() {
                 {topicArrayWithSums.slice(0, 10).map((topic, index) => (
                   <div
                     key={index}
-                    className={`border-[1px] border-border px-5 py-3 bg-topic-${
+                    className={`border-[1px] rounded-sm border-border px-3 py-1.5 md:px-5 md:py-3 bg-topic-${
                       index + 1
                     } ${index < 5 ? "text-background" : ""} `}
                   >
@@ -385,9 +376,9 @@ export default function Index() {
               </div>
               <div
                 id="topicKeyWrapper"
-                className="flex flex-row gap-4 justify-end"
+                className="flex flex-row gap-4 justify-end items-center"
               >
-                <p className="text-muted-foreground text-sm">
+                <p className="text-muted-foreground text-center text-sm">
                   Higher Frequency
                 </p>
                 <div className="flex flex-row">
@@ -402,7 +393,9 @@ export default function Index() {
                   <div className="w-4 h-5 bg-topic-9 flex-shrink-0" />
                   <div className="w-4 h-5 bg-topic-10 flex-shrink-0" />
                 </div>
-                <p className="text-muted-foreground text-sm">Lower Frequency</p>
+                <p className="text-muted-foreground text-center text-sm">
+                  Lower Frequency
+                </p>
               </div>
             </div>
           </div>
@@ -423,19 +416,22 @@ export default function Index() {
               id="tableWrapper"
               className="flex flex-col items-start rounded-md border border-border"
             >
-              <div id="tableHeader" className="flex items-start self-stretch">
-                <div className="px-4 py-2 min-w-[256px] items-center justify-end">
-                  <p className="text-md text-muted-foreground text-right">
+              <div
+                id="tableHeader"
+                className="flex items-center md:items-start self-stretch"
+              >
+                <div className="px-4 py-2 min-w-[100px] md:min-w-[256px] items-center justify-start md:justify-end">
+                  <p className="text-md text-muted-foreground md:text-right">
                     Category
                   </p>
                 </div>
                 <div className="px-4 py-2 w-full" />
-                <div className="px-4 py-2 min-w-[132px] items-center justify-end">
+                <div className="px-4 py-2 min-w-[70px] md:min-w-[132px] items-center justify-end">
                   <p className="text-md text-muted-foreground text-right">
                     Msg. Count
                   </p>
                 </div>
-                <div className="px-4 py-2 min-w-[132px] items-center justify-end">
+                <div className="hidden md:flex px-2 md:px-4 py-2 min-w-[132px] items-center justify-end">
                   <p className="text-md text-muted-foreground text-right">
                     Answer Rate
                   </p>
@@ -457,7 +453,6 @@ export default function Index() {
             </div>
           </div>
         )}
-
         {topicsData.loading ? (
           <div className="flex h-full w-full items-center justify-center">
             <Spinner />
@@ -498,7 +493,7 @@ export default function Index() {
       </div>
       <Sheet open={isSheetOpen} onOpenChange={toggleSheet}>
         <SheetContent>
-          {topicsData.loading || conversationsData.loading ? (
+          {conversationsData.loading ? (
             <div className="flex h-full w-full items-center justify-center">
               <Spinner />
             </div>
