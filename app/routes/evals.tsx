@@ -210,7 +210,7 @@ export default function Index() {
   }, [selectedAssistants, selectedCategories, selectedAnswerTypes]);
 
   return (
-    <div className="pt-8 bg-background text-foreground min-h-screen w-full flex flex-col gap-4">
+    <div className="pt-4 bg-background text-foreground min-h-[calc(100%-56px)] w-full flex flex-col gap-4">
       <div className="flex-col">
         <h2 className="text-3xl">Evaluations</h2>
         <p className="text-muted-foreground">
@@ -404,9 +404,9 @@ export default function Index() {
       {topics && topicArrayWithSums.length > 0 && (
         <h2 className="text-2xl">Trends Breakdown</h2>
       )}
-      <div className="flex pb-8 xl:pb-0 flex-col xl:flex-row gap-0 xl:gap-4">
+      <div className="flex flex-col xl:flex-row pb-8 gap-4 xl:gap-4">
         {topics && topicArrayWithSums.length > 0 && (
-          <div className="flex flex-col pb-16 gap-4 w-full">
+          <div className="flex flex-col gap-4 w-full">
             {!selectedTopic.topicId && (
               <div className="text-muted-foreground bg-muted flex justify-center items-center text-center p-6 h-full">
                 <p>Expand a category and click a topic to see conversations</p>

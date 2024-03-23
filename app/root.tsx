@@ -92,7 +92,7 @@ function App() {
             rel="stylesheet"
           />
         </head>
-        <body className="bg-background h-[calc(100dvh)] w-screen m-0 p-0 text-foreground ">
+        <body className="bg-background h-[calc(100dvh)] w-full m-0 p-0 text-foreground ">
           <TooltipProvider>
             <AppLayout>
               <Outlet />
@@ -132,7 +132,7 @@ export function ErrorBoundary() {
         <Meta />
         <Links />
       </head>
-      <body className="h-screen w-screen m-0 p-0 bg-background text-foreground">
+      <body className="h-full w-full m-0 p-0 bg-background text-foreground">
         <div>
           <h1>Oh no!</h1>
           <p>Something went wrong.</p>
