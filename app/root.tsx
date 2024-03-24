@@ -9,6 +9,7 @@ import {
   ScrollRestoration,
   useLoaderData,
   useRouteError,
+  useMatches,
 } from "@remix-run/react";
 
 import styles from "./globals.css";
@@ -70,8 +71,14 @@ export const links: LinksFunction = () => {
 
 function App() {
   const data = useLoaderData();
+
+  const matches = useMatches();
   const [theme] = useTheme();
-  console.log("theme", theme);
+
+  const getSizeFromMatches = (id: string) => {
+    if (matches.some((match) => match.id.includes(id))) return "compact";
+    else return "expanded";
+  };
 
   return (
     <html lang="en" data-theme={theme ?? ""} className="h-[calc(100dvh)] ">
@@ -94,7 +101,7 @@ function App() {
         </head>
         <body className="bg-background h-[calc(100dvh)] w-full m-0 p-0 text-foreground ">
           <TooltipProvider>
-            <AppLayout>
+            <AppLayout size={getSizeFromMatches("/_index")}>
               <Outlet />
             </AppLayout>
           </TooltipProvider>

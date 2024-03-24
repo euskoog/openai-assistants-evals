@@ -212,9 +212,9 @@ export default function Index() {
       <div className="flex-col">
         <h2 className="text-3xl">Evaluations</h2>
         <p className="text-muted-foreground">
-          These are trending categories based on users interactions with an
-          assistant(s). Click a category in the Trends Breakdown chart to drill
-          down to a trending topic and access conversations.
+          Explore trending categories based on user interactions with
+          assistants. Select a category in the Trends Breakdown to dive into
+          specific trending topics and view related conversations.
         </p>
       </div>
 
@@ -458,15 +458,19 @@ export default function Index() {
         ) : (
           selectedTopic.topicId && (
             <div className="flex h-full w-full flex-col self-stretch border border-border rounded-md">
-              <div className="flex flex-row justify-between p-4 align-baseline items-baseline self-stretch">
-                <p className="text-foreground font-semibold text-lg leading-7">
-                  {selectedTopic.topicName}:{" "}
-                  {topicsData.data ? topicsData.data.length : 0} messages
-                </p>
-                <p className="text-sm">
-                  {" "}
-                  Answer Rate: {selectedTopicAnswerRate.toFixed(1)}%
-                </p>
+              <div className="flex flex-row justify-between p-4 align-baseline items-center self-stretch">
+                <div>
+                  <p>{selectedTopic.topicName}</p>
+                  <p className="text-muted-foreground">
+                    {topicsData.data ? topicsData.data.length : 0} messages
+                  </p>
+                </div>
+                <div className="text-right">
+                  <p> Answer Rate</p>
+                  <p className="text-muted-foreground">
+                    {selectedTopicAnswerRate.toFixed(1)}%
+                  </p>
+                </div>
               </div>
 
               <DataTable
@@ -499,17 +503,21 @@ export default function Index() {
             selectedConversation.conversationId &&
             selectedConversation.messageId && (
               <div className="flex h-full flex-col self-stretch w-full">
-                <div className="flex flex-row justify-between p-4 align-baseline items-baseline self-stretch">
-                  <p className="text-foreground font-semibold text-lg leading-7">
-                    {selectedTopic.topicName}:{" "}
-                    {topicsData.data ? topicsData.data.length : 0} messages
-                  </p>
-                  <p className="text-sm">
-                    {" "}
-                    Answer Rate: {selectedTopicAnswerRate.toFixed(1)}%
-                  </p>
+                <div className="flex flex-row justify-between gap-2 p-2 align-baseline items-center self-stretch">
+                  <div>
+                    <p>{selectedTopic.topicName}</p>
+                    <p className="text-muted-foreground">
+                      {topicsData.data ? topicsData.data.length : 0} messages
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <p>Answer Rate</p>
+                    <p className="text-muted-foreground">
+                      {selectedTopicAnswerRate.toFixed(1)}%
+                    </p>
+                  </div>
                 </div>
-                <div className="flex flex-row items-center gap-4 px-4 py-2 w-full ">
+                <div className="flex flex-row items-center gap-4 p-2 w-full ">
                   <div className="flex flex-row gap-2 items-center overflow-hidden w-full self-stretch">
                     <div className=" flex flex-col items-start justify-center self-stretch">
                       <p className="text-xs">Classification:</p>

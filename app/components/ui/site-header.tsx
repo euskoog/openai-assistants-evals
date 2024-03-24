@@ -13,7 +13,7 @@ import { NavLink, Link, useMatches } from "@remix-run/react";
 import { GlobalLoadingIndicator } from "../GlobalLoadingIndicator";
 import { cn } from "@/lib/utils";
 
-export function SiteHeader() {
+export function SiteHeader({ size }: { size: "expanded" | "compact" }) {
   const [theme, setTheme] = useTheme();
   const matches = useMatches();
 
@@ -28,7 +28,12 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <GlobalLoadingIndicator />
-      <div className="container flex h-14 max-w-[2000px] items-center justify-between">
+      <div
+        className={cn(
+          "container flex h-14 items-center justify-between",
+          size === "compact" ? "max-w-[1000px]" : "max-w-[2000px]"
+        )}
+      >
         <div className="flex flex-row gap-10">
           <NavLink
             className="hidden md:flex flex-row gap-2 items-center"
