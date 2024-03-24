@@ -1,5 +1,14 @@
 import { Theme, useTheme } from "remix-themes";
-import { Github, Moon, Sun, TrendingUp } from "lucide-react";
+import {
+  BarChart,
+  BarChartHorizontal,
+  BarChartHorizontalBig,
+  Github,
+  Layers,
+  Moon,
+  Sun,
+  TrendingUp,
+} from "lucide-react";
 import { NavLink, Link, useMatches } from "@remix-run/react";
 import { GlobalLoadingIndicator } from "../GlobalLoadingIndicator";
 import { cn } from "@/lib/utils";
@@ -20,12 +29,12 @@ export function SiteHeader() {
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <GlobalLoadingIndicator />
       <div className="container flex h-14 max-w-[2000px] items-center justify-between">
-        <div className="flex flex-row gap-6">
+        <div className="flex flex-row gap-10">
           <NavLink
             className="hidden md:flex flex-row gap-2 items-center"
             to="/"
           >
-            <TrendingUp className="w-5 h-5 shrink-0" />
+            <Layers className="w-5 h-5 shrink-0 stroke-[1.5px]" />
             <h1 className="text-md font-semibold">OpenAI Assistant Evals</h1>
           </NavLink>
           <div className="flex flex-row gap-6">

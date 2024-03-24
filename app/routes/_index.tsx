@@ -1,10 +1,26 @@
 import type { MetaFunction } from "@vercel/remix";
 
 export const meta: MetaFunction = () => {
-  return [
-    { title: "New Remix App" },
-    { name: "description", content: "Welcome to Remix!" },
+  const title = `${"OpenAI Assistant Evals"}`;
+  const description = `${"Evaluate your OpenAI assistants and export your results."}`;
+
+  const titleElements = [
+    { title: title },
+    {
+      property: "og:title",
+      content: title,
+    },
   ];
+
+  const descriptionElements = [
+    { description: description },
+    {
+      property: "og:description",
+      content: description,
+    },
+  ];
+
+  return [...titleElements, ...descriptionElements];
 };
 
 export default function Index() {
