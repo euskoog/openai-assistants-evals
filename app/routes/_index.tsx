@@ -1,5 +1,14 @@
-import type { MetaFunction } from "@vercel/remix";
 import { NavLink } from "@remix-run/react";
+import type { MetaFunction } from "@vercel/remix";
+
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import {
+  categorize,
+  getClassification,
+  getTopic,
+} from "~/components/codeSnippets";
+import { oneDark } from "~/components/codeStyles";
+import { BlogCard } from "~/components/ui/blogCard";
 
 export const meta: MetaFunction = () => {
   const title = `${"OpenAI Assistant Evals"}`;
@@ -194,7 +203,159 @@ export default function Index() {
       </div>
       <div className="text-lg flex flex-col gap-4">
         <h2 className="md:px-4 pt-4 text-4xl font-bold">Objective</h2>
-        <p className="md:px-4">TODO</p>
+        <p className="md:px-4">
+          Let's focus in on Classification for a second. How do we come to a
+          conclusion on what is "Answered", "Not Answered", or "Not Allowed"?
+          <br />
+          <br />
+          Obviously this answer is going to vary depending on the assistant's
+          instructions, but we can create a general guideline for what we're
+          looking for. Currently I use the following template for my assistants:
+        </p>
+        <SyntaxHighlighter
+          className="text-sm"
+          language="python"
+          style={oneDark}
+        >
+          {getClassification}
+        </SyntaxHighlighter>
+        <p className="md:px-4">
+          Notice the subtle differences between the three classification
+          options. Each option is concise and lightweight, providing a clear
+          path for the evaluator to follow. With just these simple options we
+          unlock the ability to quickly evaluate performance per assistant.
+          <br />
+        </p>
+        <BlogCard
+          content="If you are evaluating multiple assistants in an 
+        enterprise setting, it might be wise to add more domain knowledge 
+        and strict boundaries to this process."
+        />
+        <p className="md:px-4">
+          Let's add context for the Categorization and Topic selection process
+          as well.
+          <br />
+          <br />
+          The Category and Topic processes are built around a similar structure
+          to Classification, but they also can reference previous messages from
+          the conversation. This helps for situations when a user asks questions
+          like:
+          <br />
+          <br />
+          1. "What's the weather like in Tampa Bay?"
+          <br />
+          2. "How about in New York?"
+          <br />
+          <br />
+          Without context from the previous message, the assistant might
+          categorize the messages as:
+          <br />
+          <br />
+          <span className="text-primary">1. "Weather"</span>
+          <br />
+          <span className="text-accent">2. "Location"</span>
+          <br />
+          <br />
+          But with context, the assistant can understand that the user is asking
+          for the weather in two different locations, returning:
+          <br />
+          <br />
+          <span className="text-primary">1. "Weather"</span>
+          <br />
+          <span className="text-primary">2. "Location"</span>
+          <br />
+          <br />
+          Let's see these prompts in action!
+        </p>
+        <h2 className="md:px-4 pt-4 text-3xl font-bold">Categorize:</h2>
+        <p className="md:px-4">
+          When selecting a category, we pick from a list of predetermined
+          categories. I use these defaults for all of my assistant
+          categorization:
+          <ul className="list-disc pl-8 text-primary">
+            <br />
+            <li>
+              <p className="text-foreground">
+                <strong>About:</strong> Used when the user is asking about the
+                assistant's capabilities/features or the assistant's domain.
+              </p>
+            </li>
+            <li>
+              <p className="text-foreground">
+                <strong>Communication:</strong> Used when the user is asking to
+                communicate with a human or something other than the assistant.
+              </p>
+            </li>
+            <li>
+              <p className="text-foreground">
+                <strong>Feedback:</strong> Used when the user is providing
+                feedback about the assistant or a result.
+              </p>
+            </li>
+            <li>
+              <p className="text-foreground">
+                <strong>Help:</strong> Used when the user is asking for help
+                using the assistant or its capabilities/features. Also useful
+                for when a user is trying to troubleshoot.
+              </p>
+            </li>
+            <li>
+              <p className="text-foreground">
+                <strong>Resources:</strong> Used when the user is asking for a
+                resource or link.
+              </p>
+            </li>
+            <li>
+              <p className="text-foreground">
+                <strong>Salutations:</strong>Used when the user is greeting the
+                assistant or saying goodbye.
+              </p>
+            </li>
+            <li>
+              <p className="text-foreground">
+                <strong>Settings:</strong>Used when the user is asking to change
+                a setting or preference.
+              </p>
+            </li>
+
+            <li>
+              <p className="text-foreground">
+                <strong>Other:</strong>Used when the user's query does not fit
+                into any of the above categories.
+              </p>
+            </li>
+            <br />
+          </ul>
+        </p>
+        <SyntaxHighlighter
+          className="text-sm"
+          language="python"
+          style={oneDark}
+        >
+          {categorize}
+        </SyntaxHighlighter>
+        <h2 className="md:px-4 pt-4 text-3xl font-bold">Topic Assignment:</h2>
+        <p className="md:px-4">
+          First, let's clear something up. For each category that we have stored
+          in the database, we also have a list of topics that are relevant to
+          that category. These topics are appended to if a new topic is
+          generated from a query.
+          <br />
+          <br />
+          We keep each topic as concise as possible and we store them as a{" "}
+          <code className="rounded-md bg-muted p-1">CategoryTopic</code>, so
+          that we can easily reference them in the future.
+          <br />
+          <br />
+          Let's take a look at the Topic Assignment prompt:
+        </p>
+        <SyntaxHighlighter
+          className="text-sm"
+          language="python"
+          style={oneDark}
+        >
+          {getTopic}
+        </SyntaxHighlighter>
       </div>
       <div className="text-lg flex flex-col gap-4">
         <h2 className="md:px-4 pt-4 text-4xl font-bold">Process</h2>
