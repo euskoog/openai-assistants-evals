@@ -298,7 +298,7 @@ export default function Index() {
       ) : (
         topicArrayWithSums.length > 0 && (
           <div className="flex flex-col md:flex-row gap-4 w-full justify-between">
-            <div className="w-full bg-muted border-[1px] border-border p-4 gap-2 flex flex-col items-left">
+            <div className="w-full bg-muted border-[1px] border-border p-4 gap-2 flex flex-col items-left rounded-md">
               <div className="flex flex-row gap-2">
                 <p className="text-md text-muted-foreground">Answer Rate</p>
                 <AnswerRateTooltip />
@@ -355,7 +355,7 @@ export default function Index() {
                 </div>
               </div>
             </div>
-            <div className="w-full bg-muted border-[1px] border-border p-4 gap-2 flex flex-col items-left">
+            <div className="w-full bg-muted border-[1px] border-border p-4 gap-2 flex flex-col items-left rounded-md">
               <p className="text-md text-muted-foreground">
                 What are users asking? (Top 10 Topics)
               </p>
