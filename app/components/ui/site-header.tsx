@@ -34,7 +34,7 @@ export function SiteHeader({ size }: { size: "expanded" | "compact" }) {
           size === "compact" ? "max-w-[1000px]" : "max-w-[2000px]"
         )}
       >
-        <div className="flex flex-row gap-10">
+        <div className="flex flex-row gap-10 text-primary">
           <NavLink
             className="hidden md:flex flex-row gap-2 items-center"
             to="/"
