@@ -76,7 +76,6 @@ export default function Index() {
     useState<SelectedConversation>(defaultSelectedConversation);
 
   const toggleSheet = () => {
-    // setSelectedConversation(defaultSelectedConversation);
     setIsSheetOpen(!isSheetOpen);
   };
 
@@ -206,7 +205,6 @@ export default function Index() {
 
   useEffect(() => {
     setSelectedTopic(defaultSelectedTopic);
-    setSelectedConversation(defaultSelectedConversation);
   }, [selectedAssistants, selectedCategories, selectedAnswerTypes]);
 
   return (

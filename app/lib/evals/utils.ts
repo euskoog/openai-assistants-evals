@@ -218,7 +218,7 @@ export const getSelectedTopicAnswerRate = (
   topicCount: any,
   selectedTopic: SelectedTopic
 ) => {
-  const selectedTopicFromTopicCount = topicCount.data?.find(
+  const selectedTopicFromTopicCount = topicCount.find(
     (entry) =>
       entry.topicId === selectedTopic.topicId &&
       entry.categoryName === selectedTopic.categoryName

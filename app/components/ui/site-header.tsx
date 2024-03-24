@@ -20,19 +20,19 @@ export function SiteHeader() {
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <GlobalLoadingIndicator />
       <div className="container flex h-14 max-w-[2000px] items-center justify-between">
-        <div className="flex flex-row gap-8">
+        <div className="flex flex-row gap-6">
           <NavLink
             className="hidden md:flex flex-row gap-2 items-center"
             to="/"
           >
-            <h1 className="text-lg font-bold">OpenAI Assistant Evals</h1>
-            <TrendingUp className="w-6 h-6 shrink-0" />
+            <TrendingUp className="w-5 h-5 shrink-0" />
+            <h1 className="text-md font-semibold">OpenAI Assistant Evals</h1>
           </NavLink>
-          <div className="flex flex-row gap-4">
+          <div className="flex flex-row gap-6">
             <NavLink
               to="/"
               className={cn(
-                "hover:text-muted-foreground hover:underline text-input text-sm flex items-center gap-2",
+                "hover:text-muted-foreground text-input text-sm flex items-center gap-2",
                 isAtRoot("/_index") && "text-foreground hover:text-foreground"
               )}
             >
@@ -41,7 +41,7 @@ export function SiteHeader() {
             <NavLink
               to="/evals"
               className={cn(
-                "hover:text-muted-foreground hover:underline text-input text-sm flex items-center gap-2",
+                "hover:text-muted-foreground text-input text-sm flex items-center gap-2",
                 isCurrentRoute("/evals") &&
                   "text-foreground hover:text-foreground"
               )}
@@ -53,7 +53,7 @@ export function SiteHeader() {
               target="_blank"
               rel="noopener noreferrer"
               className={cn(
-                "hover:text-muted-foreground hover:underline text-input text-sm flex items-center gap-2"
+                "hover:text-muted-foreground text-input text-sm flex items-center gap-2"
               )}
             >
               API

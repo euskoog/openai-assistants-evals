@@ -123,6 +123,7 @@
   }
 
   [data-theme="dark"] {
+    color-scheme: dark;
     --destructive-active: var(--red-900);
     --link: var(--primary);
     --primary-active: var(--blue-500);
