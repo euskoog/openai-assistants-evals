@@ -112,7 +112,15 @@ export default function Index() {
           <br />
           All of these steps are subjective when it comes to evaluating your
           system. Feel free to omit or add as you see fit.
+          <br />
+          <br />
         </p>
+        <BlogCard
+          content="All data used in this guide and dashboard is fetched from my 
+          OpenAI-Assistants-Link project. If you want to use your own data, I 
+          would recommend following my guide for setting up the API. See 'API'
+          in the header for more information."
+        />
       </div>
       <div className="text-lg flex flex-col gap-4">
         <h2 className="md:px-4 pt-4 text-4xl font-bold">1. Criteria</h2>
@@ -478,7 +486,110 @@ export default function Index() {
       </div>
       <div className="text-lg flex flex-col gap-4">
         <h2 className="md:px-4 pt-4 text-4xl font-bold">4. Analysis</h2>
-        <p className="md:px-4">TODO</p>
+        <p className="md:px-4">
+          Now that we have our data, let's visualize it. We can start off with
+          basic views that we can manage for all/some of our assistants.
+          <br />
+          <br />
+          On the evals page, we can see a high-level view of our "Answer Rate"
+          and the "Top 10 Trending Topics".
+          <br />
+          <br />
+          <img
+            src="eval_dashboard.png"
+            alt="Evaluation System"
+            className="w-full"
+          />
+          <br />
+          <br />
+          These views are great for quickly identifying trends and patterns in
+          both assistants and categories. For example, if I want to see the
+          trending topics in my "OpenAI Weather" assistant for my "Weather"
+          category, only when the classification is "Not Answered", I can
+          quickly filter the data and see what's going on.
+          <br />
+          <br />
+          Now let's move on to the Trends Breakdown section. This section allows
+          us to dive into category-specific data for each assistant. We can see
+          how each category is performing and what topics are trending (by
+          count) within that category.
+          <br />
+          <br />
+          <img
+            src="eval_dashboard.png"
+            alt="Evaluation System"
+            className="w-full"
+          />
+          <br />
+          <br />
+          Now that we have stepped into a category, we can view the composition
+          of said trending topics. By clicking on a topic in the Trends
+          Breakdown section, we can see a table of the messages for that topic,
+          specific to all the filters present.
+          <br />
+          <br />
+          <img
+            src="eval_dashboard.png"
+            alt="Evaluation System"
+            className="w-full"
+          />
+          <br />
+          <br />
+          By clicking on a message, we are able to take an even BIGGER step into
+          the data, by viewing the conversation where that message originated.
+          This allows us to see the context of the message and how it was
+          processed by the assistant.
+          <br />
+          <br />
+          <img
+            src="eval_dashboard.png"
+            alt="Evaluation System"
+            className="w-full"
+          />
+          <br />
+          <br />
+        </p>
+        <div className="text-lg flex flex-col gap-4">
+          <h2 className="md:px-4 pt-4 text-4xl font-bold">Final Notes</h2>
+          <p className="md:px-4">
+            Setting up an evaluation suite for your OpenAI assistants can be a
+            daunting task, but with the right tools and a clear objective, you
+            can create a system that works for you. I have found that the
+            process of evaluating my assistants has helped me understand the
+            strengths and weaknesses of my instructions and implementations, and
+            has given me a clear path for improvement.
+            <br />
+            <br />
+            If you are looking to create a similar evaluation suite, I would
+            recommend starting with the basics and building from there. Feel
+            free to reference my{" "}
+            <a
+              href="https://github.com/euskoog/openai-assistants-link"
+              className="text-primary"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Assistants Link API
+            </a>{" "}
+            to learn how to connect assistants and my{" "}
+            <a
+              href="https://github.com/euskoog/openai-assistants-evals"
+              className="text-primary"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Assistant Evals Repo
+            </a>{" "}
+            to learn how to create a dashboard like the one{" "}
+            <NavLink className="text-primary" to="/evals">
+              here
+            </NavLink>
+            .
+            <br />
+            <br />
+            Thanks!
+          </p>
+        </div>
       </div>
     </div>
   );
