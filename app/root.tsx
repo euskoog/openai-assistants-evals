@@ -99,7 +99,7 @@ function App() {
             rel="stylesheet"
           />
         </head>
-        <body className="bg-background h-[calc(100dvh)] w-full m-0 p-0 text-foreground ">
+        <body className="bg-background min-h-screen w-full m-0 p-0 text-foreground ">
           <TooltipProvider>
             <AppLayout size={getSizeFromMatches("/_index")}>
               <Outlet />

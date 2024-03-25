@@ -68,7 +68,7 @@ export default function Index() {
           <br />
           <br />
           Let's break down how we can approach this problem:
-          <ul className="list-disc pl-8 text-primary">
+          <ul className="list-decimal pl-8 text-primary">
             <br />
             <li>
               <p className="text-foreground">
@@ -115,7 +115,7 @@ export default function Index() {
         </p>
       </div>
       <div className="text-lg flex flex-col gap-4">
-        <h2 className="md:px-4 pt-4 text-4xl font-bold">Criteria</h2>
+        <h2 className="md:px-4 pt-4 text-4xl font-bold">1. Criteria</h2>
         <p className="md:px-4">
           Let's talk about what we're looking for. For this implementation,
           we're going to keep things <u>strictly to semantics</u>. I have broken
@@ -202,7 +202,7 @@ export default function Index() {
         </p>
       </div>
       <div className="text-lg flex flex-col gap-4">
-        <h2 className="md:px-4 pt-4 text-4xl font-bold">Objective</h2>
+        <h2 className="md:px-4 pt-4 text-4xl font-bold">2. Objective</h2>
         <p className="md:px-4">
           Let's focus in on Classification for a second. How do we come to a
           conclusion on what is "Answered", "Not Answered", or "Not Allowed"?
@@ -267,7 +267,7 @@ export default function Index() {
           <br />
           Let's see these prompts in action!
         </p>
-        <h2 className="md:px-4 pt-4 text-3xl font-bold">Categorize:</h2>
+        <h2 className="md:px-4 pt-4 text-2xl font-bold">Categorize:</h2>
         <p className="md:px-4">
           When selecting a category, we pick from a list of predetermined
           categories. I use these defaults for all of my assistant
@@ -307,26 +307,32 @@ export default function Index() {
             </li>
             <li>
               <p className="text-foreground">
-                <strong>Salutations:</strong>Used when the user is greeting the
+                <strong>Salutations:</strong> Used when the user is greeting the
                 assistant or saying goodbye.
               </p>
             </li>
             <li>
               <p className="text-foreground">
-                <strong>Settings:</strong>Used when the user is asking to change
-                a setting or preference.
+                <strong>Settings:</strong> Used when the user is asking to
+                change a setting or preference.
               </p>
             </li>
 
             <li>
               <p className="text-foreground">
-                <strong>Other:</strong>Used when the user's query does not fit
+                <strong>Other:</strong> Used when the user's query does not fit
                 into any of the above categories.
               </p>
             </li>
             <br />
           </ul>
         </p>
+        <BlogCard
+          content="If you want to get the most out of this process, 
+        I would recommend having custom categories for each assistant to 
+        figure out what works best for your use case- these defaults will
+        only tell you so much."
+        />
         <SyntaxHighlighter
           className="text-sm"
           language="python"
@@ -334,12 +340,14 @@ export default function Index() {
         >
           {categorize}
         </SyntaxHighlighter>
-        <h2 className="md:px-4 pt-4 text-3xl font-bold">Topic Assignment:</h2>
+        <h2 className="md:px-4 pt-4 text-2xl font-bold">Topic Assignment:</h2>
         <p className="md:px-4">
           First, let's clear something up. For each category that we have stored
           in the database, we also have a list of topics that are relevant to
-          that category. These topics are appended to if a new topic is
-          generated from a query.
+          that category. Every time we run topic assignment, we pull from this
+          list of topics to assign a topic to the query. If the generated topic
+          is not in the list, we can create a new one and add it to the
+          database.
           <br />
           <br />
           We keep each topic as concise as possible and we store them as a{" "}
@@ -358,11 +366,118 @@ export default function Index() {
         </SyntaxHighlighter>
       </div>
       <div className="text-lg flex flex-col gap-4">
-        <h2 className="md:px-4 pt-4 text-4xl font-bold">Process</h2>
-        <p className="md:px-4">TODO</p>
+        <h2 className="md:px-4 pt-4 text-4xl font-bold">3. Process</h2>
+        <p className="md:px-4">
+          My testing process is treated as a{" "}
+          <a
+            href="https://fastapi.tiangolo.com/tutorial/background-tasks/"
+            className="text-primary"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            FastAPI Background Task
+          </a>
+          , which updates a conversation after a chat message has been fully
+          processed. My testing task is broken down into this order:
+          <ul className="list-decimal pl-8 text-primary">
+            <br />
+            <li>
+              <p className="text-foreground">
+                <strong>Classification:</strong> (assistant instructions, user
+                query, assistant response)
+              </p>
+            </li>
+            <li>
+              <p className="text-foreground">
+                <strong>Sentiment:</strong> (user query only)
+              </p>
+            </li>
+            <li>
+              <p className="text-foreground">
+                <strong>Categorization:</strong> (user query, existing
+                categories, previous messages)
+              </p>
+            </li>
+            <li>
+              <p className="text-foreground">
+                <strong>Topic Assignment:</strong> (user query, assigned
+                category, previous messages)
+              </p>
+            </li>
+          </ul>
+          <br />
+          After each step is completed, we update a{" "}
+          <code className="rounded-md bg-muted p-1">Message</code> table with
+          relevant messages from the conversation, and we add the test results
+          as a metadata property. Using a JSON metadata property allows us to
+          add and remove different test results as needed.
+          <br />
+          <br />
+          When we go to load the data for the evaluation dashboard, we can
+          quickly parse the metadata property and display the results in a
+          user-friendly format. Getting the classification from a user query is
+          as simple as:{" "}
+          <code className="rounded-md bg-muted p-1">
+            message.metadata["classification"]
+          </code>
+          <br />
+          <br />
+          This is a high-level approach, and there is a lot of opportunity for
+          customization. Say for example, you have a robust RAG system for
+          retreiving documents for assistant usage and you want to evaluate
+          performance based on that. You could add a{" "}
+          <code className="rounded-md bg-muted p-1">
+            DocumentRetrieval
+          </code>{" "}
+          class to the process and evaluate the assistant's performance based on
+          whatever metrics you see fit. Then, you could add those results to the
+          message metadata property.
+          <br />
+          <br />
+          We can even take it a step further! If you have a larger set of
+          testing criteria, you could create a separate table for each test
+          result, possibly named{" "}
+          <code className="rounded-md bg-muted p-1">Evaluation</code>, and link
+          it back to the message. This would allow you to have a more granular
+          view of the assistant's performance and you wouldn't have to maintain
+          an arbitrary metadata object for each message.
+          <br />
+          <br />
+          To be honest, if I had a larger use case or more cases to test, I
+          would definitely go with the latter option, as it would make the
+          entire process scalable and maintainable. I can only imagine that
+          enterprise-level systems would need this level of granularity.
+          <br />
+          <br />
+          If you are looking for more information on what to add to your custom
+          evaluation suite, I would recommend checking out these resources:
+          <ul className="list-disc pl-8 text-primary">
+            <br />
+            <li>
+              <a
+                href="https://www.vellum.ai/blog/how-to-evaluate-your-rag-system"
+                className="text-primary"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                How to Evaluate Your RAG System
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://amagastya.medium.com/decoding-llm-performance-a-guide-to-evaluating-llm-applications-e8d7939cafce"
+                className="text-primary"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Evaluating LLM Applications
+              </a>
+            </li>
+          </ul>
+        </p>
       </div>
       <div className="text-lg flex flex-col gap-4">
-        <h2 className="md:px-4 pt-4 text-4xl font-bold">Analysis</h2>
+        <h2 className="md:px-4 pt-4 text-4xl font-bold">4. Analysis</h2>
         <p className="md:px-4">TODO</p>
       </div>
     </div>

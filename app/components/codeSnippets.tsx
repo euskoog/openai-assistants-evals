@@ -36,9 +36,7 @@ export const getClassification = `def get_classification(self, instructions: str
         prompt = template.render(instructions=instructions)
 
         options = ["Answered", "Not Answered", "Not Allowed"]
-        input = f"
-            Query: {query}
-            Response: {response}"
+        input = f"Query: {query} \\n Response: {response}"
 
         # classification service built from OpenAI's API and MarvinAI
         classification = Classification( 
@@ -120,6 +118,7 @@ export const getTopic = `def get_topic(
     category_topics = topic_service.get_existing_topics_from_category(
         category.id)
 
+    # extract previous message content, with info about the message category and topic
     previous_messages_formatted = format_prompt_messages(previous_messages)
 
     topic_assignment_prompt = """
