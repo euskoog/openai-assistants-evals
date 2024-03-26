@@ -104,11 +104,7 @@ export default function Index() {
           </NavLink>
           <br />
           <br />
-          <img
-            src="eval_dashboard.png"
-            alt="Evaluation System"
-            className="w-full"
-          />
+          <img src="dashboard.png" alt="Evaluation System" className="w-full" />
           <br />
           All of these steps are subjective when it comes to evaluating your
           system. Feel free to omit or add as you see fit.
@@ -495,11 +491,7 @@ export default function Index() {
           and the "Top 10 Trending Topics".
           <br />
           <br />
-          <img
-            src="eval_dashboard.png"
-            alt="Evaluation System"
-            className="w-full"
-          />
+          <img src="overall.png" alt="Evaluation System" className="w-full" />
           <br />
           <br />
           These views are great for quickly identifying trends and patterns in
@@ -515,11 +507,7 @@ export default function Index() {
           count) within that category.
           <br />
           <br />
-          <img
-            src="eval_dashboard.png"
-            alt="Evaluation System"
-            className="w-full"
-          />
+          <img src="trends.png" alt="Evaluation System" className="w-full" />
           <br />
           <br />
           Now that we have stepped into a category, we can view the composition
@@ -529,7 +517,7 @@ export default function Index() {
           <br />
           <br />
           <img
-            src="eval_dashboard.png"
+            src="topic-messages.png"
             alt="Evaluation System"
             className="w-full"
           />
@@ -542,7 +530,7 @@ export default function Index() {
           <br />
           <br />
           <img
-            src="eval_dashboard.png"
+            src="conversation.png"
             alt="Evaluation System"
             className="w-full"
           />
