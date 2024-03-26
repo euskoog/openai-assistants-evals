@@ -58,24 +58,16 @@ export class AnalyticsService {
     /**
      * Get Topics Count
      * Get total topics for all assistants
-     * @param fromDate
-     * @param toDate
      * @param requestBody
      * @returns any Successful Response
      * @throws ApiError
      */
     public static getTopicsCount(
-        fromDate: string = '2024-03-13T17:30:26.661426',
-        toDate: string = '2024-03-20T17:30:26.661443',
         requestBody?: Array<string>,
     ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/analytics/topics/count',
-            query: {
-                'from_date': fromDate,
-                'to_date': toDate,
-            },
             body: requestBody,
             mediaType: 'application/json',
             errors: {
@@ -91,8 +83,6 @@ export class AnalyticsService {
      * @param topicId
      * @param categoryId
      * @param requestBody
-     * @param fromDate
-     * @param toDate
      * @returns any Successful Response
      * @throws ApiError
      */
@@ -100,8 +90,6 @@ export class AnalyticsService {
         topicId: string,
         categoryId: string,
         requestBody: Body_analytics_get_topic_messages,
-        fromDate: string = '2024-03-13T17:30:26.662802',
-        toDate: string = '2024-03-20T17:30:26.662816',
     ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'POST',
@@ -109,8 +97,6 @@ export class AnalyticsService {
             query: {
                 'topic_id': topicId,
                 'category_id': categoryId,
-                'from_date': fromDate,
-                'to_date': toDate,
             },
             body: requestBody,
             mediaType: 'application/json',

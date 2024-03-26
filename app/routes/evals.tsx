@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 
-import { addDays, startOfDay, endOfDay } from "date-fns";
 import { AnswerRateTooltip } from "~/components/AnswerRateTooltip";
 import { CategoryRow } from "~/components/CategoryRow";
 import { AnswerRateBarChart } from "~/components/Charts";
@@ -44,13 +43,9 @@ export const loader = async ({ request }: LoaderArgs) => {
   const assistants = (await Api.AssistantsService.listAssistants()).data || [];
   const assistantIds: string[] = assistants.map((assistant) => assistant.id);
 
-  const fromDate: string = "2024-03-13T17:30:26.661426";
-  const toDate: string = "2024-03-20T17:30:26.661443";
-
   const categories = (await Api.AnalyticsService.getCategories()).data || [];
   const topics =
-    (await Api.AnalyticsService.getTopicsCount(fromDate, toDate, assistantIds))
-      .data || [];
+    (await Api.AnalyticsService.getTopicsCount(assistantIds)).data || [];
 
   return {
     assistants: assistants,
@@ -79,18 +74,9 @@ export default function Index() {
     setIsSheetOpen(!isSheetOpen);
   };
 
-  const date = {
-    from: startOfDay(addDays(new Date(), -14)),
-    to: endOfDay(new Date()),
-  };
-
   const useTopicsData = useTopics(
     selectedTopic["assistantIds"],
     selectedTopic.topicId,
-    {
-      startDate: date?.from?.toISOString() || "",
-      endDate: date?.to?.toISOString() || "",
-    },
     selectedTopic.categoryId,
     selectedAnswerTypes.map((answerType) => answerType.label)
   );

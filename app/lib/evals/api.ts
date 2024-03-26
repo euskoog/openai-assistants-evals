@@ -29,11 +29,7 @@ export const topicCountQuery = (
   return {
     queryKey: ["topicCount", params],
     queryFn: (): Promise<any> =>
-      Api.AnalyticsService.getTopicsCount(
-        params.fromDate,
-        params.toDate,
-        formData
-      ).then((response) => {
+      Api.AnalyticsService.getTopicsCount(formData).then((response) => {
         return response.data;
       }),
 
@@ -52,9 +48,7 @@ export const topicMessagesQuery = (
       Api.AnalyticsService.getTopicMessages(
         params.topicId,
         params.categoryId,
-        formData,
-        params.fromDate,
-        params.toDate
+        formData
       ).then((response) => {
         return response.data;
       }),

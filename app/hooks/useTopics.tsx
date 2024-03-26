@@ -1,19 +1,12 @@
 import { useQueries } from "react-query";
 import { topicMessagesQuery } from "~/lib/evals/api";
-import { getAdjustedDateRange } from "~/lib/evals/utils";
 
 export const useTopics = (
   assistantIds: string[],
   topicId: string,
-  dateRange: {
-    startDate: string;
-    endDate: string;
-  },
   categoryId: string,
   answerTypes: string[]
 ) => {
-  const adjustedDateRange = getAdjustedDateRange(dateRange);
-
   const answerTypesArray =
     answerTypes.length > 0
       ? answerTypes
@@ -29,8 +22,6 @@ export const useTopics = (
       {
         topicId: topicId,
         categoryId: categoryId,
-        fromDate: adjustedDateRange.startDate,
-        toDate: adjustedDateRange.endDate,
       }
     ),
   ];
@@ -42,7 +33,7 @@ export const useTopics = (
     { data: any[]; status: string; loading: boolean }
   > = {};
 
-  if (!assistantIds || !topicId || !dateRange.startDate || !dateRange.endDate) {
+  if (!assistantIds || !topicId) {
     return {
       data: { topicMessages: { data: [], loading: false, status: "noData" } },
     };
