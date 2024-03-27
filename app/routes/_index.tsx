@@ -113,7 +113,7 @@ export default function Index() {
         </p>
         <BlogCard
           content="All data used in this guide and dashboard is fetched from my 
-          OpenAI-Assistants-Link project. If you want to use your own data, I 
+          OpenAI-Assistants-Link project. ALL DATA IS MY OWN. If you want to use your own data, I 
           would recommend following my guide for setting up the API. See 'API'
           in the header for more information."
         />
