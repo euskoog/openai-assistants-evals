@@ -78,6 +78,11 @@ export default function Index() {
   const [selectedConversation, setSelectedConversation] =
     useState<SelectedConversation>(defaultSelectedConversation);
 
+  /*
+    Before you come at me with pitchforks, yes I know I'm using client-side data fetching 
+    in a Remix server-rendered route. In the future I will refactor this to use Remix 
+    `fetcher()` with server actions instead.
+  */
   const useTopicsData = useTopics(
     selectedTopic["assistantIds"],
     selectedTopic.topicId,
