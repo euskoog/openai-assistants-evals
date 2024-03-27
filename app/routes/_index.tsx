@@ -266,7 +266,7 @@ export default function Index() {
           <br />
           <span className="text-primary">1. "Weather"</span>
           <br />
-          <span className="text-primary">2. "Location"</span>
+          <span className="text-primary">2. "Weather"</span>
           <br />
           <br />
           Let's see these prompts in action!
