@@ -1,6 +1,18 @@
 import { endOfDay, format, startOfDay } from "date-fns";
 import type { CategoryStats, FormattedStats, SelectedTopic } from "./types";
 
+export interface AssistantTopicData {
+  assistantId: string;
+  categoryId: string;
+  categoryName: string;
+  topicId: string;
+  topicName: string;
+  numAnswered: number;
+  numNotAnswered: number;
+  numNotAllowed: number;
+  totalSum: number;
+}
+
 export const getFormattedCategories = (
   filteredAnswerType: any
 ): FormattedStats => {
@@ -134,7 +146,7 @@ export const getFilteredAnswerType = (
   selectedAssistantValues: string[],
   selectedCategoryValues: string[],
   selectedAnswerTypeValues: string[]
-) => {
+): AssistantTopicData[] => {
   const filterAnswerTypeByAssistantCategory = (originalData) => {
     return originalData.filter(
       (entry) =>

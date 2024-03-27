@@ -1,9 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 
-import { AnswerRateTooltip } from "~/components/AnswerRateTooltip";
-import { CategoryRow } from "~/components/CategoryRow";
-import { AnswerRateBarChart } from "~/components/Charts";
-import MultipleSelector from "~/components/ui/multipleSelect";
 import type { Option } from "~/components/ui/multipleSelect";
 import { Spinner } from "~/components/ui/spinner";
 import { TrendsEmpty } from "~/components/ui/trendsEmpty";
@@ -18,7 +14,6 @@ import {
   defaultSelectedTopic,
 } from "~/lib/evals/types";
 import {
-  formatCount,
   getFilteredAnswerType,
   getFormattedCategories,
   getFormattedTime,
@@ -26,18 +21,21 @@ import {
   getSelectedTopicAnswerRate,
   getSortedCategoriesMap,
   getTopicArrayWithSums,
-  getUniqueCategories,
 } from "~/lib/evals/utils";
-import { cn } from "~/lib/utils";
 import { useLoaderData } from "@remix-run/react";
 import type { LoaderArgs } from "@remix-run/node";
-import { DataTable } from "~/components/ui/dataTable";
-import { AvatarWrapper, roleAttributes } from "~/components/ui/chatMessage";
-import { AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { useConversations } from "~/hooks/useConversation";
 import { useTopics } from "~/hooks/useTopics";
 import { topicTableColumns } from "~/components/columns";
 import { Sheet, SheetContent } from "~/components/ui/sheet";
+import { useAssistantData } from "~/hooks/useAssistantData";
+import { useCategoriesData } from "~/hooks/useCategoriesData";
+import { MultipleSelectors } from "~/components/MultipleSelectors";
+import { AnswerRateSection } from "~/components/AnswerRateSection";
+import { TopicSection } from "~/components/TopicSection";
+import { ConversationSheetView } from "~/components/ConversationSheetView";
+import { SelectedTopicSection } from "~/components/SelectedTopicSection";
+import { CategoryTopicsSection } from "~/components/CategoryTopicsSection";
 
 export const loader = async ({ request }: LoaderArgs) => {
   const assistants = (await Api.AssistantsService.listAssistants()).data || [];
@@ -57,22 +55,28 @@ export const loader = async ({ request }: LoaderArgs) => {
 export default function Index() {
   const { assistants, categories, topics } = useLoaderData<typeof loader>();
 
+  const { selectedAssistants, setSelectedAssistants, assistantOptionsSorted } =
+    useAssistantData(assistants);
+
+  const { selectedCategories, setSelectedCategories, categoryOptionsSorted } =
+    useCategoriesData(categories, selectedAssistants);
+
+  const answerOptions: Option[] = [
+    { value: "answered", label: "Answered" },
+    { value: "notAnswered", label: "Not Answered" },
+    { value: "notAllowed", label: "Not Allowed" },
+  ];
+
   const assistantsDropddownRef = useRef<HTMLDivElement>(null);
   const categoriesDropddownRef = useRef<HTMLDivElement>(null);
   const answerTypesDropddownRef = useRef<HTMLDivElement>(null);
 
   const [isSheetOpen, setIsSheetOpen] = useState(false);
-  const [selectedAssistants, setSelectedAssistants] = useState<Option[]>([]);
-  const [selectedCategories, setSelectedCategories] = useState<Option[]>([]);
   const [selectedAnswerTypes, setSelectedAnswerTypes] = useState<Option[]>([]);
   const [selectedTopic, setSelectedTopic] =
     useState<SelectedTopic>(defaultSelectedTopic);
   const [selectedConversation, setSelectedConversation] =
     useState<SelectedConversation>(defaultSelectedConversation);
-
-  const toggleSheet = () => {
-    setIsSheetOpen(!isSheetOpen);
-  };
 
   const useTopicsData = useTopics(
     selectedTopic["assistantIds"],
@@ -97,31 +101,6 @@ export default function Index() {
   const selectedAnswerTypeValues = selectedAnswerTypes.map(
     (answerType) => answerType.value
   );
-
-  // Sort the select options alphabetically
-  const assistantOptions: Option[] = assistants.map((assistant) => {
-    return { value: assistant.id, label: assistant.name };
-  });
-  const uniqueCategoriesList = getUniqueCategories(
-    selectedAssistantValues,
-    categories
-  );
-
-  const categoryOptions: Option[] = uniqueCategoriesList.map((category) => {
-    return { value: category.id, label: category.name };
-  });
-  const categoryOptionsSorted = categoryOptions.sort((a, b) =>
-    a.label.localeCompare(b.label)
-  );
-  const assistantOptionsSorted = assistantOptions.sort((a, b) =>
-    a.label.localeCompare(b.label)
-  );
-
-  const answerOptions: Option[] = [
-    { value: "answered", label: "Answered" },
-    { value: "notAnswered", label: "Not Answered" },
-    { value: "notAllowed", label: "Not Allowed" },
-  ];
 
   // Filter answer type for usage in topics and categories
   const filteredAnswerType = getFilteredAnswerType(
@@ -157,37 +136,9 @@ export default function Index() {
     selectedConversation.timestamp || ""
   );
 
-  const countAnswered = filteredAnswerType.reduce(
-    (sum, entry) => sum + entry.numAnswered,
-    0
-  );
-  const countNotAnswered = filteredAnswerType.reduce(
-    (sum, entry) => sum + entry.numNotAnswered,
-    0
-  );
-
-  const countNotAllowed = filteredAnswerType.reduce(
-    (sum, entry) => sum + entry.numNotAllowed,
-    0
-  );
-
-  const answerRateChartData = [
-    {
-      value: "answered",
-      count: countAnswered,
-      color: "bg-answered",
-    },
-    {
-      value: "notAnswered",
-      count: countNotAnswered,
-      color: "bg-not-answered",
-    },
-    {
-      value: "notAllowed",
-      count: countNotAllowed,
-      color: "bg-not-allowed",
-    },
-  ].filter((entry) => entry.count > 0);
+  const toggleSheet = () => {
+    setIsSheetOpen(!isSheetOpen);
+  };
 
   useEffect(() => {
     setSelectedTopic(defaultSelectedTopic);
@@ -205,67 +156,27 @@ export default function Index() {
       </div>
 
       <div className="flex flex-col md:flex-row gap-2 md:gap-4">
-        <div className="flex flex-col gap-[6px] w-full md:w-[240px]">
-          <label className="text-foreground text-sm">Assistants</label>
-          <div>
-            <MultipleSelector
-              defaultOptions={assistantOptionsSorted}
-              className="w-full md:w-[240px]"
-              placeholder="Select an Assistant..."
-              selected={selectedAssistants}
-              setSelected={setSelectedAssistants}
-              allSelectLabel="All Assistants"
-              dropdownRef={assistantsDropddownRef}
-              emptyIndicator={
-                <p className="text-center text-md leading-50">
-                  No assistants found.
-                </p>
-              }
-              groupBy="group"
-            />
-          </div>
-        </div>
-        <div className="flex flex-col gap-[6px] w-full md:w-[240px]">
-          <label className="text-foreground text-sm">Categories</label>
-          <div>
-            <MultipleSelector
-              defaultOptions={categoryOptionsSorted}
-              options={categoryOptionsSorted}
-              className="w-full md:w-[240px]"
-              placeholder="Select a category..."
-              selected={selectedCategories}
-              setSelected={setSelectedCategories}
-              allSelectLabel="All Categories"
-              dropdownRef={categoriesDropddownRef}
-              emptyIndicator={
-                <p className="text-center text-md leading-50">
-                  No categories found.
-                </p>
-              }
-              groupBy="group"
-            />
-          </div>
-        </div>
-        <div className="flex flex-col gap-[6px] w-full md:w-[240px]">
-          <label className="text-foreground text-sm">Answer Type</label>
-          <div>
-            <MultipleSelector
-              defaultOptions={answerOptions}
-              className="w-full md:w-[240px]"
-              placeholder="Select an answer type..."
-              selected={selectedAnswerTypes}
-              setSelected={setSelectedAnswerTypes}
-              allSelectLabel="All Answer Types"
-              dropdownRef={answerTypesDropddownRef}
-              emptyIndicator={
-                <p className="text-center text-md leading-50">
-                  No answer types found.
-                </p>
-              }
-              groupBy="group"
-            />
-          </div>
-        </div>
+        <MultipleSelectors
+          label="Assistants"
+          options={assistantOptionsSorted}
+          selected={selectedAssistants}
+          setSelected={setSelectedAssistants}
+          dropdownRef={assistantsDropddownRef}
+        />
+        <MultipleSelectors
+          label="Categories"
+          options={categoryOptionsSorted}
+          selected={selectedCategories}
+          setSelected={setSelectedCategories}
+          dropdownRef={categoriesDropddownRef}
+        />
+        <MultipleSelectors
+          label="Answer Types"
+          options={answerOptions}
+          selected={selectedAnswerTypes}
+          setSelected={setSelectedAnswerTypes}
+          dropdownRef={answerTypesDropddownRef}
+        />
       </div>
 
       {topics.loading ? (
@@ -284,104 +195,8 @@ export default function Index() {
       ) : (
         topicArrayWithSums.length > 0 && (
           <div className="flex flex-col md:flex-row gap-4 w-full justify-between">
-            <div className="w-full bg-muted border-[1px] border-border p-4 gap-2 flex flex-col items-left rounded-md">
-              <div className="flex flex-row gap-2">
-                <p className="text-md text-muted-foreground">Answer Rate</p>
-                <AnswerRateTooltip />
-              </div>
-              <h1 className="text-5xl">
-                {countAnswered + countNotAnswered > 0
-                  ? (
-                      (countAnswered / (countAnswered + countNotAnswered)) *
-                      100
-                    ).toFixed(1)
-                  : 0}
-                %
-              </h1>
-              <AnswerRateBarChart barData={answerRateChartData} />
-              <div
-                id="answerRateKeyWrapper"
-                className="flex flex-row gap-4 justify-end"
-              >
-                <div
-                  className={cn(
-                    countAnswered > 0
-                      ? "flex flex-row gap-1 items-center"
-                      : "hidden"
-                  )}
-                >
-                  <div className="w-4 h-5 bg-answered flex-shrink-0" />
-                  <p className="text-muted-foreground text-sm">
-                    Answered: {formatCount(countAnswered)}
-                  </p>
-                </div>
-                <div
-                  className={cn(
-                    countNotAnswered > 0
-                      ? "flex flex-row gap-1 items-center"
-                      : "hidden"
-                  )}
-                >
-                  <div className="w-4 h-5 bg-not-answered flex-shrink-0" />
-                  <p className="text-muted-foreground text-sm">
-                    Not Answered: {formatCount(countNotAnswered)}
-                  </p>
-                </div>
-                <div
-                  className={cn(
-                    countNotAllowed > 0
-                      ? "flex flex-row gap-1 items-center"
-                      : "hidden"
-                  )}
-                >
-                  <div className="w-4 h-5 bg-not-allowed flex-shrink-0" />
-                  <p className="text-muted-foreground text-sm">
-                    Not Allowed: {formatCount(countNotAllowed)}
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="w-full bg-muted border-[1px] border-border p-4 gap-2 flex flex-col items-left rounded-md">
-              <p className="text-md text-muted-foreground">
-                What are users asking? (Top 10 Topics)
-              </p>
-
-              <div className="flex flex-wrap gap-2">
-                {topicArrayWithSums.slice(0, 10).map((topic, index) => (
-                  <div
-                    key={index}
-                    className={`border-[1px] rounded-sm border-border px-3 py-1.5 md:px-5 md:py-3 bg-topic-${
-                      index + 1
-                    } ${index < 5 ? "text-background" : ""} `}
-                  >
-                    {topic.topicName}
-                  </div>
-                ))}
-              </div>
-              <div
-                id="topicKeyWrapper"
-                className="flex flex-row gap-4 justify-end items-center"
-              >
-                <p className="text-muted-foreground text-center text-sm">
-                  Higher Frequency
-                </p>
-                <div className="flex flex-row">
-                  <div className="w-4 h-5 bg-topic-1 flex-shrink-0" />
-                  <div className="w-4 h-5 bg-topic-2 flex-shrink-0 hidden md:flex" />
-                  <div className="w-4 h-5 bg-topic-3 flex-shrink-0" />
-                  <div className="w-4 h-5 bg-topic-4 flex-shrink-0 hidden md:flex" />
-                  <div className="w-4 h-5 bg-topic-5 flex-shrink-0" />
-                  <div className="w-4 h-5 bg-topic-6 flex-shrink-0 hidden md:flex" />
-                  <div className="w-4 h-5 bg-topic-7 flex-shrink-0" />
-                  <div className="w-4 h-5 bg-topic-8 flex-shrink-0 hidden md:flex" />
-                  <div className="w-4 h-5 bg-topic-9 flex-shrink-0" />
-                  <div className="w-4 h-5 bg-topic-10 flex-shrink-0" />
-                </div>
-                <p className="text-muted-foreground text-center text-sm">
-                  Lower Frequency
-                </p>
-              </div>
-            </div>
+            <AnswerRateSection filteredAnswerType={filteredAnswerType} />
+            <TopicSection topicArrayWithSums={topicArrayWithSums} />
           </div>
         )
       )}
@@ -390,52 +205,13 @@ export default function Index() {
       )}
       <div className="flex flex-col xl:flex-row pb-8 gap-4 xl:gap-4">
         {topics && topicArrayWithSums.length > 0 && (
-          <div className="flex flex-col gap-4 w-full">
-            {!selectedTopic.topicId && (
-              <div className="text-muted-foreground bg-muted flex justify-center items-center text-center p-6 h-full">
-                <p>Expand a category and click a topic to see conversations</p>
-              </div>
-            )}
-            <div
-              id="tableWrapper"
-              className="flex flex-col items-start rounded-md border border-border"
-            >
-              <div
-                id="tableHeader"
-                className="flex items-center md:items-start self-stretch"
-              >
-                <div className="px-4 py-2 min-w-[100px] md:min-w-[256px] items-center justify-start md:justify-end">
-                  <p className="text-md text-muted-foreground md:text-right">
-                    Category
-                  </p>
-                </div>
-                <div className="px-4 py-2 w-full" />
-                <div className="px-4 py-2 min-w-[70px] md:min-w-[132px] items-center justify-end">
-                  <p className="text-md text-muted-foreground text-right">
-                    Msg. Count
-                  </p>
-                </div>
-                <div className="hidden md:flex px-2 md:px-4 py-2 min-w-[132px] items-center justify-end">
-                  <p className="text-md text-muted-foreground text-right">
-                    Answer Rate
-                  </p>
-                </div>
-              </div>
-              {Object.entries(sortedCategoriesMap).map(
-                (category, index) =>
-                  category[1].totalSum > 0 && (
-                    <CategoryRow
-                      key={index}
-                      maxCount={maxCategorySum}
-                      selected={selectedTopic}
-                      setSelected={setSelectedTopic}
-                      setConversation={setSelectedConversation}
-                      formattedCategory={category}
-                    />
-                  )
-              )}
-            </div>
-          </div>
+          <CategoryTopicsSection
+            sortedCategoriesMap={sortedCategoriesMap}
+            maxCategorySum={maxCategorySum}
+            selectedTopic={selectedTopic}
+            setSelectedTopic={setSelectedTopic}
+            setSelectedConversation={setSelectedConversation}
+          />
         )}
         {topicsData.loading ? (
           <div className="flex h-full w-full items-center justify-center">
@@ -443,39 +219,14 @@ export default function Index() {
           </div>
         ) : (
           selectedTopic.topicId && (
-            <div className="flex h-full w-full flex-col self-stretch border border-border rounded-md">
-              <div className="flex flex-row justify-between p-4 align-baseline items-center self-stretch">
-                <div>
-                  <p>{selectedTopic.topicName}</p>
-                  <p className="text-muted-foreground">
-                    {topicsData.data ? topicsData.data.length : 0} messages
-                  </p>
-                </div>
-                <div className="text-right">
-                  <p> Answer Rate</p>
-                  <p className="text-muted-foreground">
-                    {selectedTopicAnswerRate.toFixed(1)}%
-                  </p>
-                </div>
-              </div>
-
-              <DataTable
-                tableRowOnClick={(row: any) => {
-                  setSelectedConversation({
-                    conversationId: row.conversationId,
-                    messageId: row.id,
-                    classification: row.classification,
-                    sentiment: row.sentiment,
-                    timestamp: row.timestamp,
-                  });
-                  toggleSheet();
-                }}
-                usePadding
-                columns={topicTableColumns}
-                data={topicsData.data}
-                noResultsMessage={"No messages found."}
-              />
-            </div>
+            <SelectedTopicSection
+              selectedTopic={selectedTopic}
+              topicsData={topicsData}
+              selectedTopicAnswerRate={selectedTopicAnswerRate}
+              topicTableColumns={topicTableColumns}
+              setSelectedConversation={setSelectedConversation}
+              toggleSheet={toggleSheet}
+            />
           )
         )}
       </div>
@@ -488,79 +239,16 @@ export default function Index() {
           ) : (
             selectedConversation.conversationId &&
             selectedConversation.messageId && (
-              <div className="flex h-full flex-col self-stretch w-full">
-                <div className="flex flex-row justify-between gap-2 p-2 align-baseline items-center self-stretch">
-                  <div>
-                    <p>{selectedTopic.topicName}</p>
-                    <p className="text-muted-foreground">
-                      {topicsData.data ? topicsData.data.length : 0} messages
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <p>Answer Rate</p>
-                    <p className="text-muted-foreground">
-                      {selectedTopicAnswerRate.toFixed(1)}%
-                    </p>
-                  </div>
-                </div>
-                <div className="flex flex-row items-center gap-4 p-2 w-full ">
-                  <div className="flex flex-row gap-2 items-center overflow-hidden w-full self-stretch">
-                    <div className=" flex flex-col items-start justify-center self-stretch">
-                      <p className="text-xs">Classification:</p>
-                      <p className="line-clamp-1 text-xs text-muted-foreground">
-                        {selectedConversation.classification}
-                      </p>
-                    </div>
-                    <div className=" flex flex-col items-start justify-center self-stretch">
-                      <p className="text-xs ">Sentiment:</p>
-                      <p className="line-clamp-1 text-xs text-muted-foreground">
-                        {parseFloat(selectedConversation.sentiment) > 0.4
-                          ? "Positive"
-                          : parseFloat(selectedConversation.sentiment) < -0.4
-                          ? "Negative"
-                          : "Neutral"}
-                      </p>
-                    </div>
-                    <div className="flex flex-col items-start justify-center self-stretch">
-                      <p className="text-xs">Time (UTC):</p>
-                      <p className="line-clamp-1 text-xs text-muted-foreground">
-                        {selectedConversationTimeFormatted}
-                      </p>
-                    </div>
-                    <div className="flex flex-col items-start justify-center self-stretch">
-                      <p className="text-xs">Assistant:</p>
-                      <p className="line-clamp-1 text-xs text-muted-foreground">
-                        {conversationsData.data["assistant"]["name"]}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <div className="flex flex-col gap-1.5 items-center max-h-[100dvh] overflow-auto p-1">
-                  {conversationsData.data["message"].map((message, index) => (
-                    <div
-                      key={index}
-                      className={cn(
-                        "flex flex-row gap-4 items-center rounded-sm p-4 w-full text-foreground",
-                        message.role === "ASSISTANT" && "bg-card",
-                        message.id === selectedConversation.messageId &&
-                          "bg-secondary shadow-[0px_0px_15px_0px] shadow-primary border border-primary text-secondary-foreground"
-                      )}
-                    >
-                      <AvatarWrapper variant={message.role}>
-                        <AvatarImage
-                          src={
-                            roleAttributes[
-                              message.role.toLowerCase() as "user" | "assistant"
-                            ].imgSrc
-                          }
-                        />
-                        <AvatarFallback>CN</AvatarFallback>
-                      </AvatarWrapper>
-                      <p className="text-md">{message.content}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              <ConversationSheetView
+                selectedTopic={selectedTopic}
+                selectedConversation={selectedConversation}
+                selectedTopicAnswerRate={selectedTopicAnswerRate}
+                selectedConversationTimeFormatted={
+                  selectedConversationTimeFormatted
+                }
+                topicsData={topicsData}
+                conversationsData={conversationsData}
+              />
             )
           )}
         </SheetContent>
