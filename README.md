@@ -47,3 +47,7 @@ pnpm dev
 ```
 
 This should set you up to run the dashboard with your local data.
+
+### Notes:
+
+- This project was created using Remix, Typescript, and Tailwind CSS. To learn more about how Remix works, check out their [docs](https://remix.run/docs/en/main).
